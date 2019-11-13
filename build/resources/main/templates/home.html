@@ -1,11 +1,27 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
     <head>
-        <title>Spring Security Example</title>
+        <title>Chapters</title>
+        <link th:href="@{/css/home.css}" type="text/css" rel="stylesheet"/>
+        <link th:href="@{/css/header.css}" type="text/css" rel="stylesheet"/>
     </head>
     <body>
-        <h1>Welcome!</h1>
+        <div th:insert="header :: header"></div>
+        <table>
+            <tr>
+                <th>Chapter</th>
+                <th>Progress</th>
+            </tr>
+            <tr th:each="c : ${chapters}"
+                th:class="${c.exerciseCount > 0 ? 'active' : 'inactive'}">
+                <td>
+                    <a th:href="@{'/practice/' + ${c.chapter.id} + '/1'}"
+                       th:text="${c.chapter.id} + '. ' + ${c.chapter.name}"
+                       th:class="${c.exerciseCount > 0 ? 'active' : 'inactive'}"></a>
+                </td>
+                <td th:text="'0 / ' + ${c.exerciseCount}"></td>
+            </tr>
+        </table>
         
-        <p>Click <a th:href="@{/hello}">here</a> to see a greeting.</p>
     </body>
 </html>

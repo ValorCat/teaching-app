@@ -1,0 +1,63 @@
+.problem-list {
+  position: fixed;
+  top: 8%;
+  bottom: 1%;
+  left: 1%;
+  right: 80%;
+  overflow-x: auto;
+  overflow-y: auto;
+  background-color: #eee;
+}
+
+.problem-list a:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.problem-list a:hover {
+  background-color: aliceblue;
+}
+
+.problem-list a {
+  color: black;
+  display: block;
+  padding: 8px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.problem-list a:hover {
+  background-color: #ccc;
+}
+
+.problem-list a.current {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.problem {
+  position: fixed;
+  top: 8%;
+  bottom: 1%;
+  left: 21%;
+  right: 1%;
+  overflow-x: auto;
+  overflow-y: auto;
+  background-color: #eee;
+  padding: 10px;
+}
+
+h2 {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+textarea {
+  resize: none;
+  width: 1000px;
+  height: 400px;
+  padding: 10px;
+}
+
+body {
+  font-family: sans-serif;
+}
