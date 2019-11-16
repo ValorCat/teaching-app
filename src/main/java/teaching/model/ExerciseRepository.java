@@ -9,6 +9,14 @@ import java.util.List;
 public interface ExerciseRepository extends JpaRepository<Exercise, Integer> {
 
     List<Exercise> findByChapter(int chapter);
-    Exercise findFirstByChapterAndNumber(int chapter, int number);
+    Exercise findOneByChapterAndNumber(int chapter, int number);
+
+    default void update(int chapter, int number, String newName, String newText, String newInitial) {
+        Exercise exercise = findOneByChapterAndNumber(chapter, number);
+        exercise.setName(newName);
+        exercise.setText(newText);
+        exercise.setInitial(newInitial);
+        save(exercise);
+    }
 
 }

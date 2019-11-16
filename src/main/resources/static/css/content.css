@@ -1,0 +1,38 @@
+table {
+  position: fixed;
+  top: 8%;
+}
+
+td, th {
+  text-align: left;
+  padding: 8px;
+}
+
+th {
+  background: seagreen;
+  color: white;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+tr.active:hover {
+  background-color: aliceblue;
+}
+
+a {
+  text-decoration: none;
+}
+
+tr.inactive a {
+  color: gray;
+}
+
+tr.active a:hover {
+  color: blue;
+}
+
+body {
+  font-family: sans-serif;
+}

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+    <head></head>
+    <body>
+        <div class="exercise-list" th:fragment="exercise-list">
+            <a th:each="ex : ${exercises}"
+               th:href="'../' + ${ex.number} + '/practice'"
+               th:text="${ex.number} + '. ' + ${ex.name}"
+               th:class="${ex.number == exercise.number ? 'current' : _}">
+            </a>
+        </div>
+    </body>
+</html>

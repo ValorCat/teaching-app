@@ -8,13 +8,14 @@ public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int accountId;
+    private int id;
 
     private String username;
     private String password;
+    private String role;
 
-    public int getAccountId() {
-        return accountId;
+    public int getId() {
+        return id;
     }
 
     public String getUsername() {
@@ -25,8 +26,12 @@ public class Account {
         return password;
     }
 
+    public String getRole() {
+        return role;
+    }
+
     public String toString() {
-        return String.format("Account(%d,%s,%s)", accountId, username, password);
+        return String.format("Account(%d,%s,%s)", id, username, password);
     }
 
 }

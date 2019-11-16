@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+    <head>
+        <title th:text="'Chapter ' + ${chapter}">Practice</title>
+        <link th:href="@{/css/header.css}" type="text/css" rel="stylesheet"/>
+        <link th:href="@{/css/exercises.css}" type="text/css" rel="stylesheet"/>
+    </head>
+    <body>
+        <div th:insert="fragments/header :: header"></div>
+        <div th:replace="fragments/exercises :: exercise-list"></div>
+        <div class="problem">
+            <form method="post">
+                <input type="text" name="name" id="name-editor" th:value="${exercise.name}">
+                <p><strong>Instructions:</strong></p>
+                <textarea name="text" id="text-editor" th:text="${exercise.text}"></textarea>
+                <br>
+                <p><strong>Starting Code:</strong></p>
+                <textarea name="initial" id="editor" th:text="${exercise.initial}"></textarea>
+                <br>
+                <ul class="button-area">
+                    <li><input type="submit" class="admin button" value="SAVE"></li>
+                    <li><a href="practice" class="admin">CANCEL</a></li>
+                </ul>
+            </form>
+        </div>
+        <div th:replace="fragments/editor :: editor-js"></div>
+    </body>
+</html>

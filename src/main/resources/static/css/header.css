@@ -10,6 +10,10 @@
     width: 100%;
 }
 
+.header .admin {
+  background-color: royalblue;
+}
+
 .header li {
   float: left;
 }
@@ -18,7 +22,7 @@
   display: block;
   color: white;
   text-align: center;
-  padding: 14px 16px;
+  padding: 10px 16px;
   text-decoration: none;
   border-right: 3px solid white;
 }
@@ -32,4 +36,5 @@
   border-left: 3px solid white;
   border-right: none;
   float: right;
+  background: firebrick;
 }

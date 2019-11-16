@@ -14,6 +14,7 @@ public class Exercise {
     private int number;
     private String name;
     private String text;
+    private String initial;
 
     public int getId() {
         return id;
@@ -33,6 +34,22 @@ public class Exercise {
 
     public String getText() {
         return text;
+    }
+
+    public String getInitial() {
+        return initial;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setInitial(String initial) {
+        this.initial = initial;
     }
 
     public String toString() {

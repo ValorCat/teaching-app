@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+    <head></head>
+    <body>
+        <div th:fragment="editor-js">
+            <script th:src="@{/scripts/codemirror.js}"></script>
+            <link th:href="@{/css/codemirror.css}" rel="stylesheet">
+            <link th:href="@{/css/codemirror-idea.css}" rel="stylesheet">
+            <script th:src="@{/scripts/python.js}"></script>
+            <script>
+                var editor = document.getElementById("editor")
+                var codeMirror = CodeMirror.fromTextArea(editor, {
+                    indentUnit: 4,
+                    indentWithTabs: true,
+                    lineNumbers: true,
+                    theme: "idea"
+                })
+            </script>
+        </div>
+    </body>
+</html>
