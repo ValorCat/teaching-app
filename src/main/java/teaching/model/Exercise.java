@@ -3,21 +3,23 @@ package teaching.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "exercise", schema = "teaching-app")
+@IdClass(ExerciseId.class)
 public class Exercise {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
-
-    private int chapter;
-    private int number;
+    @Id private int chapter;
+    @Id private int number;
     private String name;
     private String text;
     private String initial;
 
-    public int getId() {
-        return id;
+    public Exercise() {}
+
+    public Exercise(int chapter, int number, String name, String text, String initial) {
+        this.chapter = chapter;
+        this.number = number;
+        this.name = name;
+        this.text = text;
+        this.initial = initial;
     }
 
     public int getChapter() {
@@ -40,6 +42,14 @@ public class Exercise {
         return initial;
     }
 
+    public void setChapter(int chapter) {
+        this.chapter = chapter;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -53,7 +63,7 @@ public class Exercise {
     }
 
     public String toString() {
-        return String.format("Exercise(%d,%d,%d)", id, chapter, number);
+        return String.format("Exercise(%d,%d)", chapter, number);
     }
 
 }

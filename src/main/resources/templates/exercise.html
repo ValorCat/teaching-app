@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+    <head>
+        <title th:text="'Chapter ' + ${chapter}">Practice</title>
+        <link th:href="@{/css/header.css}" type="text/css" rel="stylesheet"/>
+        <link th:href="@{/css/exercises.css}" type="text/css" rel="stylesheet"/>
+    </head>
+    <body>
+        <div th:insert="fragments/header :: header"></div>
+        <div th:replace="fragments/exercises :: exercise-list"></div>
+        <div class="problem">
+            <h2 th:text="${exercise.name}"></h2>
+            <p><strong>Instructions: </strong><span th:text="${exercise.text}"></span></p>
+            <textarea autofocus id="editor" th:text="${exercise.initial}"></textarea>
+            <br>
+            <ul class="button-area">
+                <li>
+                    <a th:href="'${exercise.number} + '/submit'" class="user">SUBMIT</a>
+                </li>
+                <li th:if="${user.role == 'admin'}">
+                    <a th:href="'${exercise.number} + '/edit'" class="admin">EDIT</a>
+                </li>
+                <li th:if="${user.role == 'admin'}">
+                    <a th:href="'${exercise.number} + '/remove'" class="admin">REMOVE</a>
+                </li>
+            </ul>
+        </div>
+        <div th:replace="fragments/editor :: editor-js"></div>
+    </body>
+</html>

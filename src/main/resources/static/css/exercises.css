@@ -35,6 +35,15 @@
   color: white;
 }
 
+#new-button {
+  color: white;
+  background-color: royalblue;
+}
+
+#new-button:hover {
+  background-color: cornflowerblue;
+}
+
 .problem {
   position: fixed;
   top: 8%;
@@ -75,7 +84,7 @@ h2, #name-editor {
 .button-area {
   list-style-type: none;
   position: relative;
-  left: -35px;
+  left: -45px;
 }
 
 .button-area li {
@@ -92,7 +101,6 @@ h2, #name-editor {
   font-size: 15px;
   font-weight: bold;
   text-align: center;
-  width: 5em;
   cursor: pointer;
   border: 0;
   outline: 0;

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+        <title>Create an Account</title>
+        <link th:href="@{/css/login.css}" type="text/css" rel="stylesheet"/>
+    </head>
+    <body>
+        <div id="layout">
+            <h2>Account Registration</h2>
+            <div th:if="${param.taken}" class="message">
+                That username is already taken.
+            </div>
+            <div th:if="${param.empty}" class="message">
+                You must enter a username and password.
+            </div>
+            <form method="post" id="form">
+                <input type="text" placeholder="Choose a username..." name="username"/>
+                <input type="password" placeholder="Choose a password..." name="password"/>
+                <button>Create</button>
+            </form>
+        </div>
+    </body>
+</html>

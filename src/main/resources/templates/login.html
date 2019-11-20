@@ -6,22 +6,19 @@
         <link th:href="@{/css/login.css}" type="text/css" rel="stylesheet"/>
     </head>
     <body>
-        <div class="login-page">
-            <div class="message">
-                <div th:if="${param.error}">
+        <div id="layout">
+            <form method="post" id="form">
+                <div th:if="${param.error}" class="message">
                     Invalid username or password.
                 </div>
-                <div th:if="${param.logout}">
+                <div th:if="${param.logout}" class="message">
                     You have been logged out.
                 </div>
-            </div>
-            <div class="form">
-                <form class="login-form" method="post">
-                    <input type="text" placeholder="username" name="username"/>
-                    <input type="password" placeholder="password" name="password"/>
-                    <button>Login</button>
-                </form>
-            </div>
+                <input type="text" placeholder="username" name="username"/>
+                <input type="password" placeholder="password" name="password"/>
+                <button>Login</button>
+                <a href="register">Create an Account</a>
+            </form>
         </div>
     </body>
 </html>

@@ -4,9 +4,14 @@
     <body>
         <div class="exercise-list" th:fragment="exercise-list">
             <a th:each="ex : ${exercises}"
-               th:href="'../' + ${ex.number} + '/practice'"
+               th:href="'/chapter/' + ${ex.chapter} + '/' + ${ex.number}"
                th:text="${ex.number} + '. ' + ${ex.name}"
-               th:class="${ex.number == exercise.number ? 'current' : _}">
+               th:class="${(exercise != null && ex.number == exercise.number) ? 'current' : _}">
+            </a>
+            <a href="../new"
+               id="new-button"
+               th:if="${user.role == 'admin'}">
+                New Exercise...
             </a>
         </div>
     </body>

@@ -6,16 +6,16 @@ import javax.persistence.*;
 @Table(name = "account", schema = "teaching-app")
 public class Account {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
-
-    private String username;
+    @Id private String username;
     private String password;
     private String role;
 
-    public int getId() {
-        return id;
+    public Account() {}
+
+    public Account(String username, String password, String role) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
     }
 
     public String getUsername() {
@@ -31,7 +31,7 @@ public class Account {
     }
 
     public String toString() {
-        return String.format("Account(%d,%s,%s)", id, username, password);
+        return String.format("Account(%s,%s,%s)", username, password, role);
     }
 
 }
