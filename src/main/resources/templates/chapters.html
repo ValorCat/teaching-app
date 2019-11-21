@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
     <head>
         <title>Chapters</title>
-        <link th:href="@{/css/content.css}" type="text/css" rel="stylesheet"/>
+        <link th:href="@{/css/chapters.css}" type="text/css" rel="stylesheet"/>
         <link th:href="@{/css/header.css}" type="text/css" rel="stylesheet"/>
     </head>
     <body>
@@ -13,11 +13,12 @@
                 <th>Progress</th>
             </tr>
             <tr th:each="c : ${chapters}"
-                th:class="${c.exerciseCount > 0 ? 'active' : 'inactive'}">
+                th:with="active = ${c.exerciseCount > 0 ? 'active' : 'inactive'}"
+                th:class="${active}">
                 <td>
-                    <a th:href="@{'chapter/' + ${c.chapter.id} + '/exercise/1'}"
+                    <a th:href="${active == 'active' || user.role == 'admin'} ? @{'chapter/' + ${c.chapter.id} + '/exercise/1'} : _"
                        th:text="${c.chapter.id} + '. ' + ${c.chapter.name}"
-                       th:class="${c.exerciseCount > 0 ? 'active' : 'inactive'}"></a>
+                       th:class="${active}"></a>
                 </td>
                 <td th:text="'0 / ' + ${c.exerciseCount}"></td>
             </tr>

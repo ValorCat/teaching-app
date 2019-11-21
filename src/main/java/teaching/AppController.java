@@ -7,12 +7,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import teaching.model.Account;
-import teaching.model.AccountRepository;
-import teaching.model.ChapterRepository;
-import teaching.model.ExerciseRepository;
+import teaching.model.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 public class AppController {
@@ -72,7 +70,7 @@ public class AppController {
     }
 
     @GetMapping("/chapters")
-    public String content(HttpSession session, Model model) {
+    public String chapters(HttpSession session, Model model) {
         if (session.getAttribute("user") == null) {
             return "redirect:/login";
         }
@@ -81,14 +79,30 @@ public class AppController {
         return "chapters";
     }
 
-    @GetMapping("/chapter/{chapter}/exercise/{exercise}")
-    public String practice(HttpSession session, @PathVariable int chapter, @PathVariable int exercise, Model model) {
+    @GetMapping("/chapter/{chapter}")
+    public String chapter(HttpSession session, @PathVariable int chapter, Model model) {
         if (session.getAttribute("user") == null) {
             return "redirect:/login";
         }
         model.addAttribute("user", session.getAttribute("user"));
         model.addAttribute("chapter", chapter);
         model.addAttribute("exercises", exerciseDb.findByChapter(chapter));
+        model.addAttribute("exercise", null);
+        return "exercise";
+    }
+
+    @GetMapping("/chapter/{chapter}/exercise/{exercise}")
+    public String practice(HttpSession session, @PathVariable int chapter, @PathVariable int exercise, Model model) {
+        if (session.getAttribute("user") == null) {
+            return "redirect:/login";
+        }
+        List<Exercise> exercises = exerciseDb.findByChapter(chapter);
+        if (exercises.isEmpty()) {
+            return "redirect:..";
+        }
+        model.addAttribute("user", session.getAttribute("user"));
+        model.addAttribute("chapter", chapter);
+        model.addAttribute("exercises", exercises);
         model.addAttribute("exercise", exerciseDb.findOneByChapterAndNumber(chapter, exercise));
         return "exercise";
     }
@@ -130,7 +144,7 @@ public class AppController {
         return "edit";
     }
 
-    @PostMapping("/chapters/{chapter}/exercises/{exercise}/edit")
+    @PostMapping("/chapter/{chapter}/exercise/{exercise}/edit")
     public String processEdit(HttpSession session, @PathVariable int chapter, @PathVariable int exercise,
                               String name, String text, String initial) {
         Account user = (Account) session.getAttribute("user");
@@ -138,10 +152,10 @@ public class AppController {
             return "redirect:/login";
         }
         exerciseDb.update(chapter, exercise, name, text, initial);
-        return "redirect:..";
+        return "redirect:../" + exercise;
     }
 
-    @GetMapping("/chapters/{chapter}/exercises/{exercise}/remove")
+    @GetMapping("/chapter/{chapter}/exercise/{exercise}/remove")
     @Transactional
     public String remove(HttpSession session, @PathVariable int chapter, @PathVariable int exercise) {
         Account user = (Account) session.getAttribute("user");

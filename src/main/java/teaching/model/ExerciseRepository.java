@@ -30,7 +30,7 @@ public interface ExerciseRepository extends JpaRepository<Exercise, Integer> {
         return findByChapter(chapter).stream()
                 .mapToInt(Exercise::getNumber)
                 .max()
-                .orElse(-1);
+                .orElse(0);
     }
 
 }

@@ -8,20 +8,20 @@
     <body>
         <div th:insert="fragments/header :: header"></div>
         <div th:replace="fragments/exercises :: exercise-list"></div>
-        <div class="problem">
+        <div class="problem" th:if="${exercise != null}">
             <h2 th:text="${exercise.name}"></h2>
             <p><strong>Instructions: </strong><span th:text="${exercise.text}"></span></p>
             <textarea autofocus id="editor" th:text="${exercise.initial}"></textarea>
             <br>
             <ul class="button-area">
                 <li>
-                    <a th:href="'${exercise.number} + '/submit'" class="user">SUBMIT</a>
+                    <a th:href="${exercise.number} + '/submit'" class="user">SUBMIT</a>
                 </li>
                 <li th:if="${user.role == 'admin'}">
-                    <a th:href="'${exercise.number} + '/edit'" class="admin">EDIT</a>
+                    <a th:href="${exercise.number} + '/edit'" class="admin">EDIT</a>
                 </li>
                 <li th:if="${user.role == 'admin'}">
-                    <a th:href="'${exercise.number} + '/remove'" class="admin">REMOVE</a>
+                    <a th:href="${exercise.number} + '/remove'" class="admin">REMOVE</a>
                 </li>
             </ul>
         </div>
