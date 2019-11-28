@@ -65,7 +65,7 @@ public class AppController {
         } else {
             Account newAccount = accountDb.create(username, password, "user");
             session.setAttribute("user", newAccount);
-            return "redirect:/content";
+            return "redirect:/chapters";
         }
     }
 

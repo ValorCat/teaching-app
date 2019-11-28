@@ -3,15 +3,21 @@
     margin: 0;
     padding: 0;
     border: 1px solid white;
-    background: seagreen; /*linear-gradient(to left, #76a800, green)*/;
+    background: seagreen;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
+    z-index: 100;
 }
 
 .header .admin {
   background-color: royalblue;
+}
+
+.header .admin:hover {
+  /*background-color: cornflowerblue;*/
+  filter: brightness(115%);
 }
 
 .header li {
@@ -27,9 +33,9 @@
   border-right: 3px solid white;
 }
 
-.header li a:hover {
-  background-color: aliceblue;
-  color: black;
+.header li:hover {
+  /*background-color: #40bf77;*/
+  filter: brightness(115%);
 }
 
 .header li:last-child {
@@ -37,4 +43,27 @@
   border-right: none;
   float: right;
   background: firebrick;
+}
+
+.header li:last-child:hover {
+  /*background: red;*/
+  filter: brightness(115%);
+}
+
+#dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+#dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f2f2f2;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 0px 16px;
+}
+
+#dropdown:hover #dropdown-content {
+  display: block;
 }

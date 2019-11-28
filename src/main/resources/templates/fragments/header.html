@@ -4,7 +4,12 @@
     <body>
         <ul class="header" th:fragment="header">
             <li><a th:href="@{/chapters}">Chapters</a></li>
-            <li><a href="#">My Account</a></li>
+            <li id="dropdown">
+                <a>My Account</a>
+                <div id="dropdown-content">
+                    <p th:text="'Username: ' + ${user.username}"></p>
+                </div>
+            </li>
             <li th:if="${user.role == 'admin'}" class="admin"><a th:href="@{/users}">User Management</a></li>
             <li><a th:href="@{/login?logout}">Logout</a></li>
         </ul>
