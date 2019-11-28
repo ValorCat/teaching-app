@@ -11,6 +11,7 @@ import teaching.model.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class AppController {
@@ -41,9 +42,9 @@ public class AppController {
 
     @PostMapping("/login")
     public String processLogin(HttpSession session, String username, String password) {
-        Account account = accountDb.findFirstByUsernameAndPassword(username, password);
-        if (account != null) {
-            session.setAttribute("user", account);
+        Optional<Account> account = accountDb.findByUsernameAndPassword(username, password);
+        if (account.isPresent()) {
+            session.setAttribute("user", account.get());
             return "redirect:/chapters";
         } else {
             return "redirect:/login?error";
@@ -57,8 +58,8 @@ public class AppController {
 
     @PostMapping("/register")
     public String processRegistration(HttpSession session, String username, String password) {
-        Account account = accountDb.findFirstByUsername(username);
-        if (account != null) {
+        Optional<Account> account = accountDb.findByUsername(username);
+        if (account.isPresent()) {
             return "redirect:/register?taken";
         } else if (username.isEmpty() || password.isEmpty()) {
             return "redirect:/register?empty";
