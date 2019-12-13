@@ -1,6 +1,7 @@
 package teaching.model;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "account", schema = "teaching-app")
@@ -9,6 +10,8 @@ public class Account {
     @Id private String username;
     private String password;
     private String role;
+    private LocalDateTime createTime;
+    private LocalDateTime lastLoginTime;
 
     public Account() {}
 
@@ -28,6 +31,18 @@ public class Account {
 
     public String getRole() {
         return role;
+    }
+
+    public LocalDateTime getCreateTime() {
+        return createTime;
+    }
+
+    public LocalDateTime getLastLoginTime() {
+        return lastLoginTime;
+    }
+
+    public void updateLastLoginTime() {
+        this.lastLoginTime = LocalDateTime.now();
     }
 
     public String toString() {
