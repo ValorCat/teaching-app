@@ -10,10 +10,15 @@ public class Chapter {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
+    private int number;
     private String name;
 
     public int getId() {
         return id;
+    }
+
+    public int getNumber() {
+        return number;
     }
 
     public String getName() {

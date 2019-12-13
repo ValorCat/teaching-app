@@ -2,17 +2,16 @@ package teaching.model;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Repository
 public interface ExerciseRepository extends JpaRepository<Exercise, Integer> {
 
-    List<Exercise> findByChapter(int chapter);
+    List<Exercise> findByChapterOrderByNumber(int chapter);
     Exercise findOneByChapterAndNumber(int chapter, int number);
 
-    void deleteByChapterAndNumber(int chapter, int number);
+    void deleteByChapterAndId(int chapter, int id);
 
     default void update(int chapter, int number, String newName, String newText, String newInitial) {
         Exercise exercise = findOneByChapterAndNumber(chapter, number);
@@ -22,13 +21,13 @@ public interface ExerciseRepository extends JpaRepository<Exercise, Integer> {
         save(exercise);
     }
 
-    default void create(int chapter, int number, String name, String text, String initial) {
-        save(new Exercise(chapter, number, name, text, initial));
+    default void create(int chapter, int id, int number, String name, String text, String initial) {
+        save(new Exercise(chapter, id, number, name, text, initial));
     }
 
     default int findMaxByChapter(int chapter) {
-        return findByChapter(chapter).stream()
-                .mapToInt(Exercise::getNumber)
+        return findByChapterOrderByNumber(chapter).stream()
+                .mapToInt(Exercise::getId)
                 .max()
                 .orElse(0);
     }

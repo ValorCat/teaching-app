@@ -17,7 +17,7 @@
                 th:class="${active}">
                 <td>
                     <a th:href="${active == 'active' || user.role == 'admin'} ? @{'chapter/' + ${c.chapter.id} + '/exercise/1'} : _"
-                       th:text="${c.chapter.id} + '. ' + ${c.chapter.name}"
+                       th:text="${c.chapter.number} + '. ' + ${c.chapter.name}"
                        th:class="${active}"></a>
                 </td>
                 <td th:text="'0 / ' + ${c.exerciseCount}"></td>

@@ -5,13 +5,13 @@ import java.util.Objects;
 
 public class ExerciseId implements Serializable {
 
-    private int chapter, number;
+    private int chapter, id;
 
     public ExerciseId() {}
 
-    public ExerciseId(int chapter, int number) {
+    public ExerciseId(int chapter, int id) {
         this.chapter = chapter;
-        this.number = number;
+        this.id = id;
     }
 
     @Override
@@ -20,12 +20,12 @@ public class ExerciseId implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         ExerciseId that = (ExerciseId) o;
         return chapter == that.chapter &&
-                number == that.number;
+                id == that.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(chapter, number);
+        return Objects.hash(chapter, id);
     }
 
 }

@@ -7,15 +7,17 @@ import javax.persistence.*;
 public class Exercise {
 
     @Id private int chapter;
-    @Id private int number;
+    @Id private int id;
+    private int number;
     private String name;
     private String text;
     private String initial;
 
     public Exercise() {}
 
-    public Exercise(int chapter, int number, String name, String text, String initial) {
+    public Exercise(int chapter, int id, int number, String name, String text, String initial) {
         this.chapter = chapter;
+        this.id = id;
         this.number = number;
         this.name = name;
         this.text = text;
@@ -24,6 +26,10 @@ public class Exercise {
 
     public int getChapter() {
         return chapter;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public int getNumber() {
@@ -46,6 +52,10 @@ public class Exercise {
         this.chapter = chapter;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public void setNumber(int number) {
         this.number = number;
     }
@@ -63,7 +73,7 @@ public class Exercise {
     }
 
     public String toString() {
-        return String.format("Exercise(%d,%d)", chapter, number);
+        return String.format("Exercise(%d,%d)", chapter, id);
     }
 
 }

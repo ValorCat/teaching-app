@@ -4,7 +4,7 @@
     <body>
         <div class="exercise-list" th:fragment="exercise-list">
             <a th:each="ex : ${exercises}"
-               th:href="'/chapter/' + ${ex.chapter} + '/exercise/' + ${ex.number}"
+               th:href="'/chapter/' + ${ex.chapter} + '/exercise/' + ${ex.id}"
                th:text="${ex.number} + '. ' + ${ex.name}"
                th:class="${(exercise != null && ex.number == exercise.number) ? 'current' : _}">
             </a>

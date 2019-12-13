@@ -87,7 +87,7 @@ public class AppController {
         }
         model.addAttribute("user", session.getAttribute("user"));
         model.addAttribute("chapter", chapter);
-        model.addAttribute("exercises", exerciseDb.findByChapter(chapter));
+        model.addAttribute("exercises", exerciseDb.findByChapterOrderByNumber(chapter));
         model.addAttribute("exercise", null);
         return "exercise";
     }
@@ -97,7 +97,7 @@ public class AppController {
         if (session.getAttribute("user") == null) {
             return "redirect:/login";
         }
-        List<Exercise> exercises = exerciseDb.findByChapter(chapter);
+        List<Exercise> exercises = exerciseDb.findByChapterOrderByNumber(chapter);
         if (exercises.isEmpty()) {
             return "redirect:..";
         }
@@ -116,7 +116,7 @@ public class AppController {
         }
         model.addAttribute("user", user);
         model.addAttribute("chapter", chapter);
-        model.addAttribute("exercises", exerciseDb.findByChapter(chapter));
+        model.addAttribute("exercises", exerciseDb.findByChapterOrderByNumber(chapter));
         return "new";
     }
 
@@ -127,9 +127,9 @@ public class AppController {
         if (user == null || !user.getRole().equals("admin")) {
             return "redirect:/login";
         }
-        int number = 1 + exerciseDb.findMaxByChapter(chapter);
-        exerciseDb.create(chapter, number, name, text, initial);
-        return "redirect:exercise/" + number;
+        int id = 1 + exerciseDb.findMaxByChapter(chapter);
+        exerciseDb.create(chapter, id, id, name, text, initial);
+        return "redirect:exercise/" + id;
     }
 
     @GetMapping("/chapter/{chapter}/exercise/{exercise}/edit")
@@ -140,7 +140,7 @@ public class AppController {
         }
         model.addAttribute("user", user);
         model.addAttribute("chapter", chapter);
-        model.addAttribute("exercises", exerciseDb.findByChapter(chapter));
+        model.addAttribute("exercises", exerciseDb.findByChapterOrderByNumber(chapter));
         model.addAttribute("exercise", exerciseDb.findOneByChapterAndNumber(chapter, exercise));
         return "edit";
     }
@@ -163,7 +163,7 @@ public class AppController {
         if (user == null || !user.getRole().equals("admin")) {
             return "redirect:/login";
         }
-        exerciseDb.deleteByChapterAndNumber(chapter, exercise);
+        exerciseDb.deleteByChapterAndId(chapter, exercise);
         return "redirect:../1";
     }
 
