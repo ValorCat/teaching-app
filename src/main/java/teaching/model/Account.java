@@ -1,6 +1,9 @@
 package teaching.model;
 
 import javax.persistence.*;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 
 @Entity
@@ -8,7 +11,7 @@ import java.time.LocalDateTime;
 public class Account {
 
     @Id private String username;
-    private String password;
+    private byte[] password;
     private String role;
     private LocalDateTime createTime;
     private LocalDateTime lastLoginTime;
@@ -17,7 +20,7 @@ public class Account {
 
     public Account(String username, String password, String role) {
         this.username = username;
-        this.password = password;
+        this.password = hashPassword(password);
         this.role = role;
     }
 
@@ -25,7 +28,7 @@ public class Account {
         return username;
     }
 
-    public String getPassword() {
+    public byte[] getPassword() {
         return password;
     }
 
@@ -46,7 +49,16 @@ public class Account {
     }
 
     public String toString() {
-        return String.format("Account(%s,%s,%s)", username, password, role);
+        return String.format("Account(%s,%s)", username, role);
+    }
+
+    public static byte[] hashPassword(String password) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            return digest.digest(password.getBytes(StandardCharsets.UTF_8));
+        } catch (NoSuchAlgorithmException e) {
+            throw new HashingException(e);
+        }
     }
 
 }

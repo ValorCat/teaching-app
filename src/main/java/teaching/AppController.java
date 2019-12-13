@@ -42,12 +42,10 @@ public class AppController {
 
     @PostMapping("/login")
     public String processLogin(HttpSession session, String username, String password) {
-        Optional<Account> maybeAccount = accountDb.findByUsernameAndPassword(username, password);
-        if (maybeAccount.isPresent()) {
-            Account account = maybeAccount.get();
-            account.updateLastLoginTime();
-            accountDb.save(account);
-            session.setAttribute("user", account);
+        Optional<Account> account = accountDb.findByUsernameAndPassword(username, Account.hashPassword(password));
+        if (account.isPresent()) {
+            accountDb.updateLastLoginTime(account.get());
+            session.setAttribute("user", account.get());
             return "redirect:/chapters";
         } else {
             return "redirect:/login?error";
