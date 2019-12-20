@@ -12,9 +12,7 @@ public interface AccountRepository extends JpaRepository<Account, String> {
     Optional<Account> findByUsernameAndPassword(String username, byte[] password);
 
     default Account create(String username, String password, String role) {
-        Account account = new Account(username, password, role);
-        save(account);
-        return account;
+        return save(new Account(username, password, role));
     }
 
     default void updateLastLoginTime(Account account) {

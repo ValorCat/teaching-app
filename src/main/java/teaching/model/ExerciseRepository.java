@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ExerciseRepository extends JpaRepository<Exercise, Integer> {
+public interface ExerciseRepository extends JpaRepository<Exercise, ExerciseId> {
 
     List<Exercise> findByChapterOrderByNumber(int chapter);
     Exercise findOneByChapterAndNumber(int chapter, int number);

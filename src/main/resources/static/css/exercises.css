@@ -38,6 +38,8 @@
 #new-button {
   color: white;
   background-color: royalblue;
+  text-align: center;
+  margin: 10px;
 }
 
 #new-button:hover {
