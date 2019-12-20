@@ -19,6 +19,8 @@ public class AppController {
     @Autowired AccountRepository accountDb;
     @Autowired ChapterRepository chapterDb;
     @Autowired ExerciseRepository exerciseDb;
+    @Autowired TestCaseRepository testCaseDb;
+    @Autowired TestCaseElementRepository testCaseElementDb;
 
     @GetMapping("/")
     public String root(HttpSession session) {
@@ -131,6 +133,18 @@ public class AppController {
         int id = 1 + exerciseDb.findMaxByChapter(chapter);
         exerciseDb.create(chapter, id, id, name, text, initial);
         return "redirect:exercise/" + id;
+    }
+
+    @PostMapping("/chapter/{chapter}/exercise/{exercise}/run")
+    public String run(HttpSession session, @PathVariable int chapter, @PathVariable int exercise, String attempt) {
+        if (session.getAttribute("user") == null) {
+            return "redirect:/login";
+        }
+        List<TestCase> tests = testCaseDb.findByChapterAndExercise(chapter, exercise);
+        tests.forEach(test -> testCaseElementDb.addElements(test));
+        String testJson = testCaseDb.getJson(tests);
+        ClientCodeExecutor.INSTANCE.execute(attempt, testJson);
+        return "redirect:../" + exercise;
     }
 
     @GetMapping("/chapter/{chapter}/exercise/{exercise}/edit")
