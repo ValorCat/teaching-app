@@ -29,7 +29,7 @@ tr.inactive a {
   color: gray;
 }
 
-tr.active a:hover {
+tr.active a {
   color: blue;
 }
 
