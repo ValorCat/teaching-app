@@ -24,6 +24,7 @@ public class AppController {
     @Autowired AccountRepository accountDb;
     @Autowired ChapterRepository chapterDb;
     @Autowired ExerciseRepository exerciseDb;
+    @Autowired ProgressRepository progressDb;
     @Autowired TestCaseRepository testCaseDb;
     @Autowired TestCaseElementRepository testCaseElementDb;
 
@@ -103,17 +104,22 @@ public class AppController {
     @GetMapping("/chapter/{chapter}/exercise/{exercise}")
     public String practice(HttpSession session, HttpServletRequest request, @PathVariable int chapter,
                            @PathVariable int exercise, Model model) {
-        if (session.getAttribute("user") == null) {
+        Account user = (Account) session.getAttribute("user");
+        if (user == null) {
             return "redirect:/login";
         }
         List<Exercise> exercises = exerciseDb.findByChapterOrderByNumber(chapter);
         if (exercises.isEmpty()) {
             return "redirect:..";
         }
-        model.addAttribute("user", session.getAttribute("user"));
+        Exercise exerciseData = exerciseDb.findOneByChapterAndNumber(chapter, exercise);
+        Optional<Progress> progress = progressDb.findByAccountAndChapterAndExercise(user.getUsername(), chapter, exercise);
+        String code = progress.map(Progress::getCode).orElse(exerciseData.getInitial());
+        model.addAttribute("user", user);
         model.addAttribute("chapter", chapter);
         model.addAttribute("exercises", exercises);
-        model.addAttribute("exercise", exerciseDb.findOneByChapterAndNumber(chapter, exercise));
+        model.addAttribute("exercise", exerciseData);
+        model.addAttribute("code", code);
         Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
         if (inputFlashMap != null) {
             model.addAttribute("results", inputFlashMap.get("results"));
@@ -148,13 +154,15 @@ public class AppController {
     @PostMapping("/chapter/{chapter}/exercise/{exercise}/run")
     public RedirectView run(HttpSession session, RedirectAttributes redirectAttributes, @PathVariable int chapter,
                             @PathVariable int exercise, String attempt) {
-        if (session.getAttribute("user") == null) {
+        Account user = (Account) session.getAttribute("user");
+        if (user == null) {
             return new RedirectView("/login");
         }
         List<TestCase> tests = testCaseDb.findByChapterAndExercise(chapter, exercise);
         tests.forEach(test -> testCaseElementDb.addElements(test));
         String testJson = testCaseDb.getJson(tests);
         List<TestResult> results = ClientCodeExecutor.INSTANCE.execute(attempt, tests, testJson);
+        progressDb.updateProgress(user.getUsername(), chapter, exercise, attempt);
         redirectAttributes.addFlashAttribute("results", results);
         return new RedirectView("../" + exercise);
     }

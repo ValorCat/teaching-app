@@ -12,11 +12,11 @@
             <h2 th:text="${exercise.name}"></h2>
             <p><strong>Instructions: </strong><span th:text="${exercise.text}"></span></p>
             <form method="post" th:action="${exercise.number} + '/run'">
-                <textarea autofocus id="editor" name="attempt" th:text="${exercise.initial}"></textarea>
+                <textarea autofocus id="editor" name="attempt" th:text="${code}"></textarea>
                 <br>
                 <ul class="button-area">
                     <li>
-                        <button class="user button">RUN</button>
+                        <button class="user button">SAVE AND RUN</button>
                     </li>
                     <li th:if="${user.role == 'admin'}">
                         <a th:href="${exercise.number} + '/edit'" class="admin">EDIT</a>
