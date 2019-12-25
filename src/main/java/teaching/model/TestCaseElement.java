@@ -22,6 +22,26 @@ public class TestCaseElement {
         this.content = content;
     }
 
+    public String getShortForm() {
+        if (!output) {
+            //noinspection SwitchStatementWithTooFewBranches
+            switch (location) {
+                case "<stdin>":  return "with the console containing '" + content + "'";
+                default:         return "with the file '" + location + "' containing '" + content + "'";
+            }
+        } else {
+            switch (location) {
+                case "<return>": return "I should get " + content;
+                case "<stdout>": return "I should see '" + content + "'";
+                default:         return "the file '" + location + "' should contain '" + content + "'";
+            }
+        }
+    }
+
+    public String getJson() {
+        return "\"" + location + "\": \"" + content + "\"";
+    }
+
     public int getTestCaseId() {
         return testCaseId;
     }

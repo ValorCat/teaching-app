@@ -150,10 +150,11 @@ def new_import(name, global_dict=None, local_dict=None, fromlist=(), level=0):
     elif name not in module_whitelist:
         raise ModuleNotFoundError(f"No module named '{name}'")
     module = builtins.__import__(name, global_dict, local_dict, fromlist, level)
-    for attr in fromlist:
+    for attr in fromlist or ():
         if not is_exported(module, attr):
             raise ImportError(f"cannot import name '{attr}' from '{name}'")
-    del module.__loader__
+    if hasattr(module, '__loader__'):
+        del module.__loader__
     module.__getattribute__ = module_access
     return module
 

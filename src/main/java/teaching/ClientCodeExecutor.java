@@ -1,12 +1,14 @@
 package teaching;
 
 import teaching.model.TestCase;
+import teaching.model.TestResult;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class ClientCodeExecutor {
 
@@ -14,19 +16,69 @@ public class ClientCodeExecutor {
 
     private ClientCodeExecutor() {}
 
-    public void execute(String code, String tests) {
-        System.out.println("Tests: " + tests);
-        ProcessBuilder builder = new ProcessBuilder("python", "src/main/python/run_tests.py", code, tests);
+    public List<TestResult> execute(String code, List<TestCase> tests, String testJson) {
+        ProcessBuilder builder = new ProcessBuilder(
+                "python",
+                "src/main/python/run_tests.py",
+                encode(code),
+                encode(testJson));
         try {
             Process process = builder.start();
+            process.waitFor();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            System.out.println("-----------------------------");
-            reader.lines().forEach(System.out::println);
-            System.out.println("-----------------------------");
+            Map<Integer, TestCase> testIndex = buildCaseIndex(tests);
+            List<TestResult> results = getResults(testIndex, reader);
             reader.close();
-        } catch (IOException e) {
+            return results;
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
+            return Collections.emptyList();
         }
+    }
+
+    private Map<Integer, TestCase> buildCaseIndex(List<TestCase> tests) {
+        return tests.stream().collect(Collectors.toMap(TestCase::getId, Function.identity()));
+    }
+
+    private List<TestResult> getResults(Map<Integer, TestCase> tests, BufferedReader reader) throws IOException {
+        List<TestResult> results = new ArrayList<>();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            System.out.println(line);
+            String[] parts = line.split(" ", 5);
+            TestCase test = tests.get(Integer.parseInt(parts[1]));
+            results.addAll(parseCase(parts, test, reader));
+        }
+        return results;
+    }
+
+    private List<TestResult> parseCase(String[] line, TestCase test, BufferedReader reader) throws IOException {
+        switch (line[2]) {
+            case "PASS":
+                return Collections.singletonList(new TestResult(true, test.getShortForm()));
+            case "ERROR":
+                return Collections.singletonList(new TestResult(false, test.getShortFormWithError(line[3], line[4])));
+            case "FAIL":
+                int numElements = Integer.parseInt(line[3]);
+                List<TestResult> results = new ArrayList<>(numElements);
+                for (int i = 0; i < numElements; i++) {
+                    String rawLine = reader.readLine();
+                    System.out.println(rawLine);
+                    String[] elementLine = rawLine.split(" ", 4);
+                    boolean status = elementLine[2].equals("PASS");
+                    String message = test.getOneElementShortForm(elementLine[1], elementLine[3]);
+                    results.add(new TestResult(status, message));
+                }
+                return results;
+        }
+        throw new IllegalArgumentException();
+    }
+
+    private String encode(String text) {
+        return text
+                .replaceAll("\\\\", "\\\\\\\\") // escape backslashes
+                .replaceAll("\"", "\\\\\"")     // escape double quotes
+                .replaceAll("\t", "    ");      // convert tabs to spaces
     }
 
 }
