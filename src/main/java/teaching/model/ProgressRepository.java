@@ -14,6 +14,7 @@ public interface ProgressRepository extends JpaRepository<Progress, ProgressId> 
         Optional<Progress> entry = findByAccountAndChapterAndExercise(account, chapter, exercise);
         if (entry.isPresent()) {
             entry.get().setCode(code);
+            save(entry.get());
         } else {
             create(account, chapter, exercise, code);
         }

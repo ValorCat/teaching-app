@@ -36,6 +36,8 @@
                         <td>
                             <img th:if="${test.pass}"
                                  th:src="@{/images/checkmark.png}">
+                            <img th:if="${!test.pass}"
+                                 th:src="@{/images/cross.png}">
                         </td>
                         <td th:text="${test.test}"></td>
                     </tr>

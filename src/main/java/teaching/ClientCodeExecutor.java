@@ -44,7 +44,6 @@ public class ClientCodeExecutor {
         List<TestResult> results = new ArrayList<>();
         String line;
         while ((line = reader.readLine()) != null) {
-            System.out.println(line);
             String[] parts = line.split(" ", 5);
             TestCase test = tests.get(Integer.parseInt(parts[1]));
             results.addAll(parseCase(parts, test, reader));
@@ -62,9 +61,7 @@ public class ClientCodeExecutor {
                 int numElements = Integer.parseInt(line[3]);
                 List<TestResult> results = new ArrayList<>(numElements);
                 for (int i = 0; i < numElements; i++) {
-                    String rawLine = reader.readLine();
-                    System.out.println(rawLine);
-                    String[] elementLine = rawLine.split(" ", 4);
+                    String[] elementLine = reader.readLine().split(" ", 4);
                     boolean status = elementLine[2].equals("PASS");
                     String message = test.getOneElementShortForm(elementLine[1], elementLine[3]);
                     results.add(new TestResult(status, message));

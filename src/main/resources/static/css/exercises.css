@@ -128,9 +128,24 @@ h2, #name-editor {
   background-color: cornflowerblue;
 }
 
+table {
+  border-collapse: collapse;
+}
+
 td {
   text-align: left;
   padding: 8px;
+  height: 20px;
+}
+
+td:first-child {
+  text-align: center;
+  width: 35px;
+}
+
+tr {
+  padding: 5px 0px;
+  border-bottom: 6px solid #eee;
 }
 
 tr.test-pass {
