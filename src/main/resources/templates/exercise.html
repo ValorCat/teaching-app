@@ -33,7 +33,10 @@
                 <table>
                     <tr th:each="test : ${results}"
                         th:class="${test.pass} ? 'test-pass' : 'test-fail'">
-                        <td th:text="${test.pass ? 'PASS' : 'FAIL'}"></td>
+                        <td>
+                            <img th:if="${test.pass}"
+                                 th:src="@{/images/checkmark.png}">
+                        </td>
                         <td th:text="${test.test}"></td>
                     </tr>
                 </table>
