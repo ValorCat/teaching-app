@@ -128,6 +128,19 @@ h2, #name-editor {
   background-color: cornflowerblue;
 }
 
+td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr.test-pass {
+  background-color: #adebad;
+}
+
+tr.test-fail {
+  background-color: #eb9494;
+}
+
 body {
   font-family: sans-serif;
 }

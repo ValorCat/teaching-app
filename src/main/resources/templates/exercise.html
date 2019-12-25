@@ -26,6 +26,18 @@
                     </li>
                 </ul>
             </form>
+            <br><br><br><br>
+            <div th:if="${results}">
+                <h2>Results</h2>
+                <br>
+                <table>
+                    <tr th:each="test : ${results}"
+                        th:class="${test.pass} ? 'test-pass' : 'test-fail'">
+                        <td th:text="${test.pass ? 'PASS' : 'FAIL'}"></td>
+                        <td th:text="${test.test}"></td>
+                    </tr>
+                </table>
+            </div>
         </div>
         <div th:replace="fragments/editor :: editor-js"></div>
     </body>

@@ -7,10 +7,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
+import org.springframework.web.servlet.view.RedirectView;
 import teaching.model.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -96,7 +101,8 @@ public class AppController {
     }
 
     @GetMapping("/chapter/{chapter}/exercise/{exercise}")
-    public String practice(HttpSession session, @PathVariable int chapter, @PathVariable int exercise, Model model) {
+    public String practice(HttpSession session, HttpServletRequest request, @PathVariable int chapter,
+                           @PathVariable int exercise, Model model) {
         if (session.getAttribute("user") == null) {
             return "redirect:/login";
         }
@@ -108,6 +114,10 @@ public class AppController {
         model.addAttribute("chapter", chapter);
         model.addAttribute("exercises", exercises);
         model.addAttribute("exercise", exerciseDb.findOneByChapterAndNumber(chapter, exercise));
+        Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
+        if (inputFlashMap != null) {
+            model.addAttribute("results", inputFlashMap.get("results"));
+        }
         return "exercise";
     }
 
@@ -136,15 +146,17 @@ public class AppController {
     }
 
     @PostMapping("/chapter/{chapter}/exercise/{exercise}/run")
-    public String run(HttpSession session, @PathVariable int chapter, @PathVariable int exercise, String attempt) {
+    public RedirectView run(HttpSession session, RedirectAttributes redirectAttributes, @PathVariable int chapter,
+                            @PathVariable int exercise, String attempt) {
         if (session.getAttribute("user") == null) {
-            return "redirect:/login";
+            return new RedirectView("/login");
         }
         List<TestCase> tests = testCaseDb.findByChapterAndExercise(chapter, exercise);
         tests.forEach(test -> testCaseElementDb.addElements(test));
         String testJson = testCaseDb.getJson(tests);
-        ClientCodeExecutor.INSTANCE.execute(attempt, testJson);
-        return "redirect:../" + exercise;
+        List<TestResult> results = ClientCodeExecutor.INSTANCE.execute(attempt, tests, testJson);
+        redirectAttributes.addFlashAttribute("results", results);
+        return new RedirectView("../" + exercise);
     }
 
     @GetMapping("/chapter/{chapter}/exercise/{exercise}/edit")
