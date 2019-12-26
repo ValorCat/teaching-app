@@ -30,7 +30,13 @@ tr.inactive a {
 }
 
 tr.active a {
-  color: blue;
+  color: darkgreen;
+  font-weight: bold;
+  display: block;
+}
+
+tr.active a:hover {
+  text-decoration: underline;
 }
 
 body {

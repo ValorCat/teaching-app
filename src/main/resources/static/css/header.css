@@ -15,12 +15,8 @@
   background-color: royalblue;
 }
 
-.header .admin:hover {
-  /*background-color: cornflowerblue;*/
-  filter: brightness(115%);
-}
-
 .header li {
+  background: seagreen;
   float: left;
 }
 
@@ -34,7 +30,6 @@
 }
 
 .header li:hover {
-  /*background-color: #40bf77;*/
   filter: brightness(115%);
 }
 
@@ -43,11 +38,6 @@
   border-right: none;
   float: right;
   background: firebrick;
-}
-
-.header li:last-child:hover {
-  /*background: red;*/
-  filter: brightness(115%);
 }
 
 #dropdown {
