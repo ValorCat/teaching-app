@@ -16,12 +16,12 @@ public class Progress {
 
     public Progress() {}
 
-    public Progress(String account, int chapter, int exercise, String code) {
+    public Progress(String account, int chapter, int exercise, String code, boolean complete) {
         this.account = account;
         this.chapter = chapter;
         this.exercise = exercise;
         this.code = code;
-        this.complete = false;
+        this.complete = complete;
     }
 
     public String getAccount() {

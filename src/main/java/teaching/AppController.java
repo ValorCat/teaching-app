@@ -81,22 +81,26 @@ public class AppController {
 
     @GetMapping("/chapters")
     public String chapters(HttpSession session, Model model) {
-        if (session.getAttribute("user") == null) {
+        Account user = (Account) session.getAttribute("user");
+        if (user == null) {
             return "redirect:/login";
         }
-        model.addAttribute("user", session.getAttribute("user"));
+        model.addAttribute("user", user);
         model.addAttribute("chapters", chapterDb.getChapterData(exerciseDb));
+        model.addAttribute("progress", progressDb.getChapterProgressIndex(user.getUsername()));
         return "chapters";
     }
 
     @GetMapping("/chapter/{chapter}")
     public String chapter(HttpSession session, @PathVariable int chapter, Model model) {
-        if (session.getAttribute("user") == null) {
+        Account user = (Account) session.getAttribute("user");
+        if (user == null) {
             return "redirect:/login";
         }
-        model.addAttribute("user", session.getAttribute("user"));
+        model.addAttribute("user", user);
         model.addAttribute("chapter", chapter);
         model.addAttribute("exercises", exerciseDb.findByChapterOrderByNumber(chapter));
+        model.addAttribute("completion", progressDb.getCompletionIndex(user.getUsername(), chapter));
         model.addAttribute("exercise", null);
         return "exercise";
     }
@@ -118,6 +122,7 @@ public class AppController {
         model.addAttribute("user", user);
         model.addAttribute("chapter", chapter);
         model.addAttribute("exercises", exercises);
+        model.addAttribute("completion", progressDb.getCompletionIndex(user.getUsername(), chapter));
         model.addAttribute("exercise", exerciseData);
         model.addAttribute("code", code);
         Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
@@ -136,6 +141,7 @@ public class AppController {
         model.addAttribute("user", user);
         model.addAttribute("chapter", chapter);
         model.addAttribute("exercises", exerciseDb.findByChapterOrderByNumber(chapter));
+        model.addAttribute("completion", progressDb.getCompletionIndex(user.getUsername(), chapter));
         return "new";
     }
 
@@ -161,9 +167,9 @@ public class AppController {
         List<TestCase> tests = testCaseDb.findByChapterAndExercise(chapter, exercise);
         tests.forEach(test -> testCaseElementDb.addElements(test));
         String testJson = testCaseDb.getJson(tests);
-        List<TestResult> results = ClientCodeExecutor.INSTANCE.execute(attempt, tests, testJson);
-        progressDb.updateProgress(user.getUsername(), chapter, exercise, attempt);
-        redirectAttributes.addFlashAttribute("results", results);
+        TestResults results = ClientCodeExecutor.INSTANCE.execute(attempt, tests, testJson);
+        progressDb.updateProgress(user.getUsername(), chapter, exercise, attempt, results.doAllPass());
+        redirectAttributes.addFlashAttribute("results", results.getResults());
         return new RedirectView("../" + exercise);
     }
 
@@ -176,6 +182,7 @@ public class AppController {
         model.addAttribute("user", user);
         model.addAttribute("chapter", chapter);
         model.addAttribute("exercises", exerciseDb.findByChapterOrderByNumber(chapter));
+        model.addAttribute("completion", progressDb.getCompletionIndex(user.getUsername(), chapter));
         model.addAttribute("exercise", exerciseDb.findOneByChapterAndNumber(chapter, exercise));
         return "edit";
     }

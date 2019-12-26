@@ -20,9 +20,8 @@
                        th:text="${c.chapter.number} + '. ' + ${c.chapter.name}"
                        th:class="${active}"></a>
                 </td>
-                <td th:text="'0 / ' + ${c.exerciseCount}"></td>
+                <td th:text="${progress.getOrDefault(c.chapter.number, 0)} + ' / ' + ${c.exerciseCount}"></td>
             </tr>
         </table>
-        
     </body>
 </html>

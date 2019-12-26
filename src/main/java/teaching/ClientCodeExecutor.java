@@ -2,6 +2,7 @@ package teaching;
 
 import teaching.model.TestCase;
 import teaching.model.TestResult;
+import teaching.model.TestResults;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,7 +17,7 @@ public class ClientCodeExecutor {
 
     private ClientCodeExecutor() {}
 
-    public List<TestResult> execute(String code, List<TestCase> tests, String testJson) {
+    public TestResults execute(String code, List<TestCase> tests, String testJson) {
         ProcessBuilder builder = new ProcessBuilder(
                 "python",
                 "src/main/python/run_tests.py",
@@ -27,12 +28,12 @@ public class ClientCodeExecutor {
             process.waitFor();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             Map<Integer, TestCase> testIndex = buildCaseIndex(tests);
-            List<TestResult> results = getResults(testIndex, reader);
+            TestResults results = getResults(testIndex, reader);
             reader.close();
             return results;
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
-            return Collections.emptyList();
+            return new TestResults();
         }
     }
 
@@ -40,7 +41,7 @@ public class ClientCodeExecutor {
         return tests.stream().collect(Collectors.toMap(TestCase::getId, Function.identity()));
     }
 
-    private List<TestResult> getResults(Map<Integer, TestCase> tests, BufferedReader reader) throws IOException {
+    private TestResults getResults(Map<Integer, TestCase> tests, BufferedReader reader) throws IOException {
         List<TestResult> results = new ArrayList<>();
         String line;
         while ((line = reader.readLine()) != null) {
@@ -48,7 +49,11 @@ public class ClientCodeExecutor {
             TestCase test = tests.get(Integer.parseInt(parts[1]));
             results.addAll(parseCase(parts, test, reader));
         }
-        return results;
+        boolean allPass = true;
+        for (TestResult result : results) {
+            allPass &= result.isPass();
+        }
+        return new TestResults(results, allPass);
     }
 
     private List<TestResult> parseCase(String[] line, TestCase test, BufferedReader reader) throws IOException {

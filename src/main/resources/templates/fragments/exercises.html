@@ -5,8 +5,12 @@
         <div class="exercise-list" th:fragment="exercise-list">
             <a th:each="ex : ${exercises}"
                th:href="'/chapter/' + ${ex.chapter} + '/exercise/' + ${ex.id}"
-               th:text="${ex.number} + '. ' + ${ex.name}"
                th:class="${(exercise != null && ex.number == exercise.number) ? 'current' : _}">
+                <span th:text="${ex.number} + '. ' + ${ex.name}"></span>
+                <span th:if="${completion.getOrDefault(ex.id, false)}">
+                    &nbsp
+                    <img th:src="@{/images/dark-checkmark.png}" height="16" width="16">
+                </span>
             </a>
             <a th:href="'/chapter/' + ${chapter} + '/new'"
                id="new-button"
