@@ -39,7 +39,7 @@ def run_tests(source_code, test_cases):
     # check for syntax errors
     try:
         code = compile(source_code, 'attempt.py', 'exec', dont_inherit=True, optimize=0)
-        #output_compile_test()
+        output_compile_test()
     except SyntaxError as e:
         return output_compile_test(e)
 
@@ -120,7 +120,7 @@ def output_compile_test(err: SyntaxError = None):
     if not err:
         print('COMPILE')
     else:
-        print(f'NO_COMPILE {err.lineno} {err.offset} {err.msg}')
+        print(f'NO_COMPILE {err.lineno} {err.offset} SyntaxError: {err.msg}')
 
 
 if __name__ == '__main__':

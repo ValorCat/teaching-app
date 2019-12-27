@@ -156,6 +156,10 @@ tr.test-fail {
   background-color: #eb9494;
 }
 
+p.error {
+  color: crimson;
+}
+
 body {
   font-family: sans-serif;
 }

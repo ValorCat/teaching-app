@@ -43,7 +43,21 @@
                     </tr>
                 </table>
             </div>
+            <div th:if="${error}">
+                <h2>Results</h2>
+                <p th:text="'An error occurred on line ' + ${error.getErrorLine()} + ', column ' + ${error.getErrorCol()} + ':'"></p>
+                <p th:text="${error.getErrorMessage()}" class="error"></p>
+            </div>
         </div>
         <div th:replace="fragments/editor :: editor-js"></div>
+        <script th:if="${error}" th:inline="javascript">
+            var line = [[${error.getErrorLine()}]]
+            var column = [[${error.getErrorCol()}]]
+            var from = {'line': 1, 'ch': 0}
+            var to = {'line': 1, 'ch': codeMirror.getLine(1).length}
+            var options = {'css': 'background: pink', 'clearOnEnter': true}
+            codeMirror.setCursor(line, column)
+            codeMirror.markText(from, to, options)
+        </script>
     </body>
 </html>

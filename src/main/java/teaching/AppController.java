@@ -169,7 +169,11 @@ public class AppController {
         String testJson = testCaseDb.getJson(tests);
         TestResults results = ClientCodeExecutor.INSTANCE.execute(attempt, tests, testJson);
         progressDb.updateProgress(user.getUsername(), chapter, exercise, attempt, results.doAllPass());
-        redirectAttributes.addFlashAttribute("results", results.getResults());
+        if (results.hasError()) {
+            redirectAttributes.addFlashAttribute("error", results);
+        } else {
+            redirectAttributes.addFlashAttribute("results", results.getResults());
+        }
         return new RedirectView("../" + exercise);
     }
 
