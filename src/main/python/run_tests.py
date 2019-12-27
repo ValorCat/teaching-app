@@ -108,12 +108,12 @@ def output_test_fail(case_id, case_results):
 
 
 def output_test_error(case_id, err: BaseException):
-    # get line number of top stack frame in traceback
-    line = traceback.extract_tb(err.__traceback__)[-1].lineno
-    print(f'CASE {case_id} ERROR {line} {type(err).__name__}: {err}')
-    with open('C:/Users/Anthony/Desktop/output.txt', 'a') as f:
-        traceback.print_tb(err.__traceback__, file=f)
-        print(err, file=f, end='\n\n')
+    # get line number in user's code that raised the error
+    err_line = '?'
+    for frame, line in traceback.walk_tb(err.__traceback__):
+        if frame.f_code.co_filename == 'attempt.py':
+            err_line = line
+    print(f'CASE {case_id} ERROR {err_line} {type(err).__name__}: {err}')
 
 
 def output_compile_test(err: SyntaxError = None):
