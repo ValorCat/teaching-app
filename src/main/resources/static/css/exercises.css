@@ -39,6 +39,7 @@
   color: white;
   background-color: royalblue;
   text-align: center;
+  border-radius: 5px;
   margin: 10px;
 }
 
@@ -97,6 +98,7 @@ h2, #name-editor {
 .button-area .button {
   color: white;
   display: block;
+  border-radius: 5px;
   margin: 0px 10px;
   padding: 10px 16px;
   text-decoration: none;
@@ -108,24 +110,19 @@ h2, #name-editor {
   outline: 0;
 }
 
+.button-area a:hover,
+.button-area .button:hover {
+  filter: brightness(115%);
+}
+
 .button-area a.user,
 .button-area .button.user {
   background-color: #4CAF50;
 }
 
-.button-area a.user:hover,
-.button-area .button.user:hover {
-  background-color: #64d169;
-}
-
 .button-area a.admin,
 .button-area .button.admin {
   background-color: royalblue;
-}
-
-.button-area a.admin:hover,
-.button-area .button.admin:hover {
-  background-color: cornflowerblue;
 }
 
 table {
