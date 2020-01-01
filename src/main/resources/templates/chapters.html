@@ -23,5 +23,24 @@
                 <td th:text="${progress.getOrDefault(c.chapter.number, 0)} + ' / ' + ${c.exerciseCount}"></td>
             </tr>
         </table>
+        <div id="info-panel">
+            <h2>Welcome to Adept Python</h2>
+            <p>
+                <strong>Adept Python</strong> is a repository of short Python exercises to help you practice your
+                problem-solving skills.
+            </p>
+            <p>
+                This site uses a version of Python 3.7 with a reduced library. The following modules are available to import:
+            </p>
+            <ul>
+                <li th:each="module : ${modules}">
+                    <a th:href="'https://docs.python.org/3.7/library/' + ${module.getKey()} + '.html'"
+                        rel="external noreferrer" target="_blank">
+                        <code th:text="${module.getKey()}"></code>
+                    </a>
+                    <span th:text="' - ' + ${module.getValue()}"></span>
+                </li>
+            </ul>
+        </div>
     </body>
 </html>

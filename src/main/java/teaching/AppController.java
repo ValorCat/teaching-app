@@ -88,6 +88,7 @@ public class AppController {
         model.addAttribute("user", user);
         model.addAttribute("chapters", chapterDb.getChapterData(exerciseDb));
         model.addAttribute("progress", progressDb.getChapterProgressIndex(user.getUsername()));
+        model.addAttribute("modules", ModuleDescriptions.get());
         return "chapters";
     }
 
