@@ -2,7 +2,7 @@ import builtins
 import io
 import sys
 
-builtin_blacklist = ['breakpoint', 'copyright', 'compile', 'exit', 'license', 'memoryview', 'quit']
+builtin_blacklist = ['breakpoint', 'copyright', 'compile', 'exit', 'license', 'memoryview', 'quit', 'super']
 
 module_whitelist = ['calendar', 'cmath', 'collections', 'copy', 'dataclasses', 'datetime', 'decimal', 'difflib',
                     'fractions', 'functools', 'itertools', 'math', 'numbers', 'operator', 'random', 're', 'statistics',
@@ -47,19 +47,19 @@ class Sandbox:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         global current_sandbox
-        current_sandbox = None
         sys.stdin = sys.__stdin__
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
-        for handle in self.file_handles:
+        for handle in self.file_handles.copy():
             handle.close()
         if exc_type is not None:
             self.exception = exc_val.with_traceback(exc_tb)
+        current_sandbox = None
         return True  # suppress exception
 
 
 class IOWrapper(io.StringIO):
-    def __init__(self, file: str, readonly : bool = False):
+    def __init__(self, file: str, readonly: bool = False):
         super().__init__(current_sandbox.file_system[file])
         self._name = file
         self._readonly = readonly
@@ -88,6 +88,18 @@ class IOWrapper(io.StringIO):
     def writelines(self, lines) -> None:
         for line in lines:
             self.write(line)
+
+
+class ModuleWrapper:
+    def __init__(self, name, items):
+        self.__name__ = name
+        self.__dict__.update(items)
+
+    def __getattribute__(self, attr):
+        try:
+            return super().__getattribute__(attr)
+        except AttributeError:
+            raise AttributeError(f"module '{super().__getattribute__('__name__')}' has no attribute '{attr}'")
 
 
 def new_open(file, mode='r'):
@@ -150,23 +162,13 @@ def new_import(name, global_dict=None, local_dict=None, fromlist=(), level=0):
     elif name not in module_whitelist:
         raise ModuleNotFoundError(f"No module named '{name}'")
     module = builtins.__import__(name, global_dict, local_dict, fromlist, level)
+    exports = module.__dict__.get('__all__') or module_exports.get(name) or filter(lambda x: x[0] != '_', dir(module))
     for attr in fromlist or ():
-        if not is_exported(module, attr):
+        if attr not in exports:
             raise ImportError(f"cannot import name '{attr}' from '{name}'")
-    if hasattr(module, '__loader__'):
-        del module.__loader__
-    module.__getattribute__ = module_access
-    return module
+    items = {name: getattr(module, name) for name in exports}
+    return ModuleWrapper(name, items)
 
 
-def is_exported(module, attr: str):
-    env = module.__dict__
-    name = module.__name__
-    exports = env.get('__all__') or module_exports.get(name)
-    return not exports or attr in exports
-
-
-def module_access(module, attr: str):
-    if not is_exported(module, attr):
-        raise AttributeError(f"module '{module.__name__}' has no attribute '{attr}'")
-    return module.__dict__[attr]
+new_open.__name__ = 'open'
+new_import.__name__ = '__import__'
