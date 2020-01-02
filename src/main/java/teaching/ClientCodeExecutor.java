@@ -33,7 +33,10 @@ public class ClientCodeExecutor {
             String compileCheck = reader.readLine();
             if (compileCheck == null) {
                 // an error occurred in the Python tester file
-                return new TestResults("A server error occurred while testing your submission.");
+                BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+                String error = errorReader.lines().collect(Collectors.joining("\n"));
+                errorReader.close();
+                return new TestResults("A server error occurred while testing your submission:\n" + error);
             } else if (compileCheck.startsWith("NO_COMPILE")) {
                 String[] details = compileCheck.split(" ", 4);
                 int lineNum = Integer.parseInt(details[1]);
