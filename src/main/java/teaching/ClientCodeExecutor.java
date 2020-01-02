@@ -31,7 +31,10 @@ public class ClientCodeExecutor {
             process.waitFor();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String compileCheck = reader.readLine();
-            if (compileCheck.startsWith("NO_COMPILE")) {
+            if (compileCheck == null) {
+                // an error occurred in the Python tester file
+                return new TestResults("A server error occurred while testing your submission.");
+            } else if (compileCheck.startsWith("NO_COMPILE")) {
                 String[] details = compileCheck.split(" ", 4);
                 int lineNum = Integer.parseInt(details[1]);
                 int colNum = Integer.parseInt(details[2]);
@@ -43,8 +46,7 @@ public class ClientCodeExecutor {
             reader.close();
             return results;
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-            return new TestResults();
+            return new TestResults("A server error occurred while processing the results of your submission:\n" + e);
         }
     }
 

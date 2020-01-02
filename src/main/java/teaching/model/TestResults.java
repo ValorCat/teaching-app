@@ -1,6 +1,5 @@
 package teaching.model;
 
-import java.util.Collections;
 import java.util.List;
 
 public class TestResults {
@@ -24,9 +23,11 @@ public class TestResults {
         this.errorMessage = errorMessage;
     }
 
-    public TestResults() {
-        this.results = Collections.emptyList();
-        this.allPass = false;
+    public TestResults(String errorMessage) {
+        this.hasError = true;
+        this.errorLine = 1;
+        this.errorCol = 1;
+        this.errorMessage = errorMessage;
     }
 
     public boolean doAllPass() {
