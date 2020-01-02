@@ -27,11 +27,6 @@ public class ClientCodeExecutor {
                 encode(code),
                 encode(testJson));
         try {
-            Process p = new ProcessBuilder("python", "--version").start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            return new TestResults(reader.readLine());
-        } catch (IOException e) {}
-        try {
             Process process = builder.start();
             process.waitFor();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
