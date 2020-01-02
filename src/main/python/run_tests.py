@@ -73,16 +73,16 @@ def run_tests(source_code, test_cases):
 
         # if we need to check stdout
         if '<stdout>' in outputs:
-            expected = eval(outputs.pop('<stdout>'), env.vars)
-            actual = env.stdout.getvalue()
+            expected = outputs.pop('<stdout>')
+            actual = env.stdout.getvalue().rstrip()
             success = expected == actual
             case_results['<stdout>'] = (success, actual)
             case_success = case_success and success
 
         # check all other outputs
         for location, expected in outputs:
-            actual = env.file_system.get(location, '<no such file>')
-            success = actual == eval(expected, env.vars)
+            actual = env.file_system.get(location, '<no such file>').rstrip()
+            success = actual == expected
             case_results[location] = (success, actual)
             case_success = case_success and success
 
@@ -124,6 +124,4 @@ def output_compile_test(err: SyntaxError = None):
 
 
 if __name__ == '__main__':
-    for e in sys.argv:
-        print(repr(e), file=sys.stderr)
     run_tests(sys.argv[1], sys.argv[2])

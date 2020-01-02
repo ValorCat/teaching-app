@@ -1,5 +1,8 @@
 package teaching.model;
 
+import teaching.Application;
+import teaching.ClientCodeExecutor;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -39,7 +42,7 @@ public class TestCaseElement {
     }
 
     public String getJson() {
-        return "\"" + location + "\": \"" + content + "\"";
+        return "\"" + location + "\": \"" + ClientCodeExecutor.encode(content) + "\"";
     }
 
     public int getTestCaseId() {

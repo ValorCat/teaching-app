@@ -1,5 +1,8 @@
 package teaching.model;
 
+import teaching.Application;
+import teaching.ClientCodeExecutor;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -73,7 +76,7 @@ public class TestCase {
 
         StringBuilder result = new StringBuilder("\"" + id + "\": {");
         if (testExpression != null) {
-            result.append(String.format("\"test\": \"%s\", ", testExpression));
+            result.append(String.format("\"test\": \"%s\", ", ClientCodeExecutor.encode(testExpression)));
         }
 
         // add the inputs

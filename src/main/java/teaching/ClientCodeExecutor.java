@@ -87,7 +87,7 @@ public class ClientCodeExecutor {
         throw new IllegalArgumentException();
     }
 
-    private String encode(String text) {
+    public static String encode(String text) {
         return text
                 .replaceAll("\\\\", "\\\\\\\\") // escape backslashes
                 .replaceAll("\"", "\\\\\"")     // escape double quotes
