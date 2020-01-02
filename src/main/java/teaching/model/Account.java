@@ -1,13 +1,17 @@
 package teaching.model;
 
-import javax.persistence.*;
+import teaching.Application;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "account", schema = "teaching-app")
+@Table(name = "account", schema = Application.DB_SCHEMA)
 public class Account {
 
     @Id private String username;
@@ -22,6 +26,8 @@ public class Account {
         this.username = username;
         this.password = hashPassword(password);
         this.role = role;
+        this.createTime = LocalDateTime.now();
+        this.lastLoginTime = createTime;
     }
 
     public String getUsername() {
