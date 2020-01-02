@@ -1,1 +1,1 @@
-java -jar .\build\libs\teaching-app-0.1.0.jar
+java -jar .\build\libs\adept-python-0.1.0.jar

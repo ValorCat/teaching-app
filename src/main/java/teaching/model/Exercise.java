@@ -1,9 +1,15 @@
 package teaching.model;
 
-import javax.persistence.*;
+import teaching.Application;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.Table;
 
 @Entity
 @IdClass(ExerciseId.class)
+@Table(name = "exercise", schema = Application.DB_SCHEMA)
 public class Exercise {
 
     @Id private int chapter;

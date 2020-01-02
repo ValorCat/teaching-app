@@ -13,7 +13,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 bootJar {
-    baseName = 'teaching-app'
+    baseName = 'adept-python'
     version =  '0.1.0'
 }
 
@@ -30,7 +30,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-devtools")
 
     // database
-    compile('mysql:mysql-connector-java')
+    compile('org.postgresql:postgresql')
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
 
     testCompile("junit:junit")

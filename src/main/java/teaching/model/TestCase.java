@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.StringJoiner;
 
 @Entity
-@Table(name = "test_case", schema = "teaching-app")
+@Table(name = "test_case", schema = Application.DB_SCHEMA)
 public class TestCase {
 
     @Id private int id;

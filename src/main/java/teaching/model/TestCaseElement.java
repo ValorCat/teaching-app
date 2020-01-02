@@ -6,9 +6,11 @@ import teaching.ClientCodeExecutor;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.persistence.Table;
 
 @Entity
 @IdClass(TestCaseElementId.class)
+@Table(name = "test_case_element", schema = Application.DB_SCHEMA)
 public class TestCaseElement {
 
     @Id private int testCaseId;

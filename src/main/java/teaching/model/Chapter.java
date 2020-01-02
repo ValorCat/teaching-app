@@ -1,9 +1,11 @@
 package teaching.model;
 
+import teaching.Application;
+
 import javax.persistence.*;
 
 @Entity
-@Table(name = "chapter", schema = "teaching-app")
+@Table(name = "chapter", schema = Application.DB_SCHEMA)
 public class Chapter {
 
     @Id
