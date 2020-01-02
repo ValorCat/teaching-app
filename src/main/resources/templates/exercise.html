@@ -51,10 +51,10 @@
         </div>
         <div th:replace="fragments/editor :: editor-js"></div>
         <script th:if="${error}" th:inline="javascript">
-            var line = [[${error.getErrorLine()}]]
+            var line = [[${error.getErrorLine()}]] - 1
             var column = [[${error.getErrorCol()}]]
-            var from = {'line': 1, 'ch': 0}
-            var to = {'line': 1, 'ch': codeMirror.getLine(1).length}
+            var from = {'line': line, 'ch': 0}
+            var to = {'line': line, 'ch': codeMirror.getLine(line).length}
             var options = {'css': 'background: pink', 'clearOnEnter': true}
             codeMirror.setCursor(line, column)
             codeMirror.markText(from, to, options)
