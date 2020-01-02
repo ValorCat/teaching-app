@@ -124,4 +124,5 @@ def output_compile_test(err: SyntaxError = None):
 
 
 if __name__ == '__main__':
+    print(sys.argv, file=sys.stderr)
     run_tests(sys.argv[1], sys.argv[2])
