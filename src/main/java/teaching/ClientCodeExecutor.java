@@ -7,6 +7,7 @@ import teaching.model.TestResults;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,22 +22,29 @@ public class ClientCodeExecutor {
     private ClientCodeExecutor() {}
 
     public TestResults execute(String code, List<TestCase> tests, String testJson) {
-        ProcessBuilder builder = new ProcessBuilder(
-                "python",
-                "src/main/python/run_tests.py",
-                encode(code),
-                encode(testJson));
+        ProcessBuilder builder = new ProcessBuilder("python", "src/main/python/run_tests.py");
         try {
             Process process = builder.start();
+
+            // passes in inputs (code and test cases)
+            PrintWriter writer = new PrintWriter(process.getOutputStream());
+            writer.println(encodeWhitespace(code));
+            writer.println(encodeWhitespace(testJson));
+            writer.close();
             process.waitFor();
+
+            // process test results
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String compileCheck = reader.readLine();
+
+            // an error occurred in the Python tester file
             if (compileCheck == null) {
-                // an error occurred in the Python tester file
                 BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
                 String error = errorReader.lines().collect(Collectors.joining("\n"));
                 errorReader.close();
                 return new TestResults("A server error occurred while testing your submission:\n" + error);
+
+            // the code contained a syntax error
             } else if (compileCheck.startsWith("NO_COMPILE")) {
                 String[] details = compileCheck.split(" ", 4);
                 int lineNum = Integer.parseInt(details[1]);
@@ -44,6 +52,8 @@ public class ClientCodeExecutor {
                 String message = details[3];
                 return new TestResults(lineNum, colNum, message);
             }
+
+            // the code successfully compiled
             Map<Integer, TestCase> testIndex = buildCaseIndex(tests);
             TestResults results = getResults(testIndex, reader);
             reader.close();
@@ -90,6 +100,13 @@ public class ClientCodeExecutor {
                 return results;
         }
         throw new IllegalArgumentException();
+    }
+
+    private static String encodeWhitespace(String text) {
+        return text
+                .replace("\n", "\0")
+                .replace("\r", "")
+                .replace("\t", "    ");
     }
 
     public static String encode(String text) {

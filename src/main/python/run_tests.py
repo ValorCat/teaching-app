@@ -124,5 +124,8 @@ def output_compile_test(err: SyntaxError = None):
 
 
 if __name__ == '__main__':
-    print(sys.argv, file=sys.stderr)
-    run_tests(sys.argv[1], sys.argv[2])
+    source_code = input().replace('\0', '\n')
+    test_cases = input().replace('\0', '\n')
+    with open('C:/Users/Anthony/Desktop/output.txt', 'a') as f:
+        print('Source:', source_code, '\nTests:', test_cases, file=f)
+    run_tests(source_code, test_cases)
