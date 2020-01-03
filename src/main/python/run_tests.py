@@ -126,6 +126,4 @@ def output_compile_test(err: SyntaxError = None):
 if __name__ == '__main__':
     source_code = input().replace('\0', '\n')
     test_cases = input().replace('\0', '\n')
-    with open('C:/Users/Anthony/Desktop/output.txt', 'a') as f:
-        print('Source:', source_code, '\nTests:', test_cases, file=f)
     run_tests(source_code, test_cases)
