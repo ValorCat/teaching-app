@@ -7,19 +7,19 @@
     </head>
     <body>
         <div th:insert="fragments/header :: header"></div>
-        <div th:replace="fragments/exercises :: exercise-list"></div>
+        <div th:replace="fragments/exercise-list :: exercise-list"></div>
         <div class="problem">
             <form method="post">
-                <input type="text" name="name" id="name-editor" value="New Exercise">
+                <input type="text" name="name" id="name-editor" th:value="${exercise.name}">
                 <p><strong>Instructions:</strong></p>
-                <textarea name="text" id="text-editor"></textarea>
+                <textarea name="text" id="text-editor" th:text="${exercise.text}"></textarea>
                 <br>
                 <p><strong>Starting Code:</strong></p>
-                <textarea name="initial" id="editor"></textarea>
+                <textarea name="initial" id="editor" th:text="${exercise.initial}"></textarea>
                 <br>
                 <ul class="button-area">
-                    <li><input type="submit" class="admin button" value="CREATE"></li>
-                    <li><a href="javascript:history.back()" class="admin">CANCEL</a></li>
+                    <li><input type="submit" class="admin button" value="SAVE"></li>
+                    <li><a th:href="." class="admin">CANCEL</a></li>
                 </ul>
             </form>
         </div>

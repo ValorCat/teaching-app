@@ -7,7 +7,7 @@
     </head>
     <body>
         <div th:insert="fragments/header :: header"></div>
-        <div th:replace="fragments/exercises :: exercise-list"></div>
+        <div th:replace="fragments/exercise-list :: exercise-list"></div>
         <div class="problem" th:if="${exercise != null}">
             <h2 th:text="${exercise.name}"></h2>
             <p><strong>Instructions: </strong><span th:text="${exercise.text}"></span></p>

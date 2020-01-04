@@ -90,7 +90,7 @@ public class AppController {
         model.addAttribute("user", user);
         model.addAttribute("chapters", chapterDb.getChapterData(exerciseDb));
         model.addAttribute("progress", progressDb.getChapterProgressIndex(user.getUsername()));
-        return "chapters";
+        return "chapter-list";
     }
 
     @GetMapping("/chapter/{chapter}")
@@ -104,7 +104,7 @@ public class AppController {
         model.addAttribute("exercises", exerciseDb.findByChapterOrderByNumber(chapter));
         model.addAttribute("completion", progressDb.getCompletionIndex(user.getUsername(), chapter));
         model.addAttribute("exercise", null);
-        return "exercise";
+        return "attempt-exercise";
     }
 
     @GetMapping("/chapter/{chapter}/exercise/{exercise}")
@@ -131,7 +131,7 @@ public class AppController {
         if (inputFlashMap != null) {
             model.addAttribute("results", inputFlashMap.get("results"));
         }
-        return "exercise";
+        return "attempt-exercise";
     }
 
     @GetMapping("/chapter/{chapter}/new")
@@ -144,7 +144,7 @@ public class AppController {
         model.addAttribute("chapter", chapter);
         model.addAttribute("exercises", exerciseDb.findByChapterOrderByNumber(chapter));
         model.addAttribute("completion", progressDb.getCompletionIndex(user.getUsername(), chapter));
-        return "new";
+        return "create-exercise";
     }
 
     @PostMapping("/chapter/{chapter}/new")
@@ -190,7 +190,7 @@ public class AppController {
         model.addAttribute("exercises", exerciseDb.findByChapterOrderByNumber(chapter));
         model.addAttribute("completion", progressDb.getCompletionIndex(user.getUsername(), chapter));
         model.addAttribute("exercise", exerciseDb.findOneByChapterAndNumber(chapter, exercise));
-        return "edit";
+        return "edit-exercise";
     }
 
     @PostMapping("/chapter/{chapter}/exercise/{exercise}/edit")
