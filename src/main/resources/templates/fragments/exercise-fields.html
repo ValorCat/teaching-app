@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+    <head></head>
+    <body>
+        <div class="problem" th:fragment="exercise-fields(name, text, initial, confirm)">
+            <form method="post">
+                <input type="text" name="name" id="name-editor" th:value="${name}">
+                <p><strong>Instructions:</strong></p>
+                <textarea name="text" id="text-editor" th:text="${text}"></textarea>
+                <br>
+                <p><strong>Starting Code:</strong></p>
+                <textarea name="initial" id="editor" th:text="${initial}"></textarea>
+                <br>
+                <ul class="button-area">
+                    <li><input type="submit" class="admin button" th:value="${confirm}"></li>
+                    <li><a href="javascript:history.back()" class="admin">CANCEL</a></li>
+                </ul>
+            </form>
+            <div th:replace="fragments/editor :: editor-js"></div>
+        </div>
+    </body>
+</html>
