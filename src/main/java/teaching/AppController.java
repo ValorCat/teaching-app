@@ -54,6 +54,7 @@ public class AppController {
         if (account.isPresent()) {
             accountDb.updateLastLoginTime(account.get());
             session.setAttribute("user", account.get());
+            session.setMaxInactiveInterval(3600);
             return "redirect:/chapters";
         } else {
             return "redirect:/login?error";
@@ -75,6 +76,7 @@ public class AppController {
         } else {
             Account newAccount = accountDb.create(username, password, "user");
             session.setAttribute("user", newAccount);
+            session.setMaxInactiveInterval(3600);
             return "redirect:/chapters";
         }
     }
