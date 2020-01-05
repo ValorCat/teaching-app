@@ -6,8 +6,8 @@ from format_results import build_pass_msg, build_fail_msg, build_error_msg
 
 """
 Input Model:
-    {
-        "12345": {
+    [
+        {
             "test": "",
             "inputs": {
                 "<stdin>": "",
@@ -19,7 +19,7 @@ Input Model:
                 "file": ""
             }
         }
-    }
+    ]
     
 Output Model:
     COMPILE
@@ -29,9 +29,9 @@ Output Model:
 """
 
 
-def run_tests(source_code, test_cases):
+def run_tests(source_code, tests):
     # parse json tests
-    test_cases = json.loads(test_cases)
+    tests = json.loads(tests)
 
     # check for syntax errors
     try:
@@ -41,20 +41,20 @@ def run_tests(source_code, test_cases):
         return report_compilation(e)
 
     # check each test case
-    for case_id, case_data in test_cases.items():
-        inputs, outputs = case_data['inputs'].copy(), case_data['outputs'].copy()
+    for test in tests:
+        inputs, outputs = test['inputs'].copy(), test['outputs'].copy()
         stdin_buffer = inputs.pop('<stdin>', '')
         test_output = None
 
         # switch to sandbox env
         with sandbox.Sandbox(stdin_buffer, inputs) as env:
             exec(code, env.vars)
-            if 'test' in case_data:
-                test_output = eval(case_data['test'], env.vars)
+            if 'test' in test:
+                test_output = eval(test['test'], env.vars)
 
         # if the sandbox exited with an exception
         if env and env.exception:
-            report_error(case_data, env.exception)
+            report_error(test, env.exception)
             continue  # skip to next test case
 
         case_results = {}
@@ -84,14 +84,14 @@ def run_tests(source_code, test_cases):
 
         # output results
         if case_success:
-            report_pass(case_data)
+            report_pass(test)
         else:
             for location in case_results:
                 success, result = case_results[location]
                 if success:
-                    report_pass(case_data)
+                    report_pass(test)
                 else:
-                    report_fail(case_data, location, result)
+                    report_fail(test, location, result)
 
 
 def report_pass(case_data):

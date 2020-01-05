@@ -25,8 +25,8 @@ public class ClientCodeExecutor {
 
             // passes in inputs (code and test cases)
             PrintWriter writer = new PrintWriter(process.getOutputStream());
-            writer.println(encodeWhitespace(code));
-            writer.println(encodeWhitespace(tests));
+            writer.println(encode(code));
+            writer.println(encode(tests));
             writer.close();
             process.waitFor(5, TimeUnit.SECONDS);
 
@@ -72,18 +72,11 @@ public class ClientCodeExecutor {
         return new TestResults(results, allPass);
     }
 
-    private static String encodeWhitespace(String text) {
+    private static String encode(String text) {
         return text
                 .replace("\n", "\0")
                 .replace("\r", "")
                 .replace("\t", "    ");
-    }
-
-    public static String encode(String text) {
-        return text
-                .replaceAll("\\\\", "\\\\\\\\") // escape backslashes
-                .replaceAll("\"", "\\\\\"")     // escape double quotes
-                .replaceAll("\t", "    ");      // convert tabs to spaces
     }
 
 }

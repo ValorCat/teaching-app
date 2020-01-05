@@ -22,8 +22,6 @@ def _translate_all(inputs: dict, mapping: dict):
 def build_pass_msg(case: dict):
     test = case.get('test', 'the code')
     inputs = _translate_all(case['inputs'], map_inputs)
-    with open('C:/Users/Anthony/Desktop/output.txt', 'a') as f:
-        print(case, file=f)
     outputs = _translate_all(case['outputs'], map_outputs)
     return f"When I run {test}{inputs},{outputs}."
 

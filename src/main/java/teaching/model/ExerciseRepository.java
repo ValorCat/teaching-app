@@ -13,16 +13,17 @@ public interface ExerciseRepository extends JpaRepository<Exercise, ExerciseId> 
 
     void deleteByChapterAndId(int chapter, int id);
 
-    default void update(int chapter, int number, String newName, String newText, String newInitial) {
+    default void update(int chapter, int number, String newName, String newText, String newInitial, String newTests) {
         Exercise exercise = findOneByChapterAndNumber(chapter, number);
         exercise.setName(newName);
         exercise.setText(newText);
         exercise.setInitial(newInitial);
+        exercise.setTests(newTests);
         save(exercise);
     }
 
-    default void create(int chapter, int id, int number, String name, String text, String initial) {
-        save(new Exercise(chapter, id, number, name, text, initial));
+    default void create(int chapter, int id, int number, String name, String text, String initial, String tests) {
+        save(new Exercise(chapter, id, number, name, text, initial, tests));
     }
 
     default int findMaxByChapter(int chapter) {

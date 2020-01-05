@@ -12,9 +12,10 @@
                 <textarea name="initial" id="editor" th:text="${initial}"></textarea>
                 <br>
                 <p><strong>Tests:</strong></p>
-                <ul>
-                    <li th:each="test : ${tests}" th:text="${test.getShortForm()}"></li>
-                </ul>
+<!--                <ul>-->
+<!--                    <li th:each="test : ${tests}" th:text="${test.getShortForm()}"></li>-->
+<!--                </ul>-->
+                <input type="hidden" name="tests" value="">
                 <ul class="button-area">
                     <li><input type="submit" class="admin button" th:value="${confirm}"></li>
                     <li><a href="javascript:history.back()" class="admin">CANCEL</a></li>

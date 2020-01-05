@@ -25,8 +25,6 @@ public class AppController {
     @Autowired ChapterRepository chapterDb;
     @Autowired ExerciseRepository exerciseDb;
     @Autowired ProgressRepository progressDb;
-    @Autowired TestCaseRepository testCaseDb;
-    @Autowired TestCaseElementRepository testCaseElementDb;
 
     @GetMapping("/")
     public String root(HttpSession session) {
@@ -149,13 +147,13 @@ public class AppController {
 
     @PostMapping("/chapter/{chapter}/new")
     public String processCreate(HttpSession session, Model model, @PathVariable int chapter,
-                                String name, String text, String initial) {
+                                String name, String text, String initial, String tests) {
         Account user = (Account) session.getAttribute("user");
         if (user == null || !user.getRole().equals("admin")) {
             return "redirect:/login";
         }
         int id = 1 + exerciseDb.findMaxByChapter(chapter);
-        exerciseDb.create(chapter, id, id, name, text, initial);
+        exerciseDb.create(chapter, id, id, name, text, initial, tests);
         return "redirect:exercise/" + id;
     }
 
@@ -166,8 +164,7 @@ public class AppController {
         if (user == null) {
             return new RedirectView("/login");
         }
-        List<TestCase> tests = testCaseDb.findWithElements(chapter, exercise, testCaseElementDb);
-        String testJson = testCaseDb.getJson(tests);
+        String testJson = exerciseDb.findOneByChapterAndNumber(chapter, exercise).getTests();
         TestResults results = ClientCodeExecutor.INSTANCE.execute(attempt, testJson);
         progressDb.updateProgress(user.getUsername(), chapter, exercise, attempt, results.doAllPass());
         if (results.hasError()) {
@@ -189,18 +186,17 @@ public class AppController {
         model.addAttribute("exercises", exerciseDb.findByChapterOrderByNumber(chapter));
         model.addAttribute("completion", progressDb.getCompletionIndex(user.getUsername(), chapter));
         model.addAttribute("exercise", exerciseDb.findOneByChapterAndNumber(chapter, exercise));
-        model.addAttribute("tests", testCaseDb.findWithElements(chapter, exercise, testCaseElementDb));
         return "edit-exercise";
     }
 
     @PostMapping("/chapter/{chapter}/exercise/{exercise}/edit")
     public String processEdit(HttpSession session, @PathVariable int chapter, @PathVariable int exercise,
-                              String name, String text, String initial) {
+                              String name, String text, String initial, String tests) {
         Account user = (Account) session.getAttribute("user");
         if (user == null || !user.getRole().equals("admin")) {
             return "redirect:/login";
         }
-        exerciseDb.update(chapter, exercise, name, text, initial);
+        exerciseDb.update(chapter, exercise, name, text, initial, tests);
         return "redirect:../" + exercise;
     }
 

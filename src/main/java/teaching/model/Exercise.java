@@ -18,16 +18,18 @@ public class Exercise {
     private String name;
     private String text;
     private String initial;
+    private String tests;
 
     public Exercise() {}
 
-    public Exercise(int chapter, int id, int number, String name, String text, String initial) {
+    public Exercise(int chapter, int id, int number, String name, String text, String initial, String tests) {
         this.chapter = chapter;
         this.id = id;
         this.number = number;
         this.name = name;
         this.text = text;
         this.initial = initial;
+        this.tests = tests;
     }
 
     public int getChapter() {
@@ -54,6 +56,10 @@ public class Exercise {
         return initial;
     }
 
+    public String getTests() {
+        return tests;
+    }
+
     public void setChapter(int chapter) {
         this.chapter = chapter;
     }
@@ -76,6 +82,10 @@ public class Exercise {
 
     public void setInitial(String initial) {
         this.initial = initial;
+    }
+
+    public void setTests(String tests) {
+        this.tests = tests;
     }
 
     public String toString() {
