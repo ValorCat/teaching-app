@@ -19,10 +19,10 @@
                         <button class="user button">SAVE AND RUN</button>
                     </li>
                     <li th:if="${user.role == 'admin'}">
-                        <a th:href="${exercise.number} + '/edit'" class="admin">EDIT</a>
+                        <a th:href="|${exercise.number}/edit|" class="admin">EDIT</a>
                     </li>
                     <li th:if="${user.role == 'admin'}">
-                        <a th:href="${exercise.number} + '/remove'" class="admin">REMOVE</a>
+                        <a th:href="|${exercise.number}/remove|" class="admin">REMOVE</a>
                     </li>
                 </ul>
             </form>

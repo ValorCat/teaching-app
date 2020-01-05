@@ -16,7 +16,7 @@
                 th:with="active = ${c.exerciseCount > 0 ? 'active' : 'inactive'}"
                 th:class="${active}">
                 <td>
-                    <a th:href="${active == 'active' || user.role == 'admin'} ? @{'chapter/' + ${c.chapter.id} + '/exercise/1'} : _"
+                    <a th:href="${active == 'active' || user.role == 'admin'} ? |chapter/${c.chapter.id}/exercise/1| : _"
                        th:text="${c.chapter.number} + '. ' + ${c.chapter.name}"
                        th:class="${active}"></a>
                 </td>
