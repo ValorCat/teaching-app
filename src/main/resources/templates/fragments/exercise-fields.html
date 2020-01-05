@@ -10,17 +10,26 @@
                 <br>
                 <p><strong>Starting Code:</strong></p>
                 <textarea name="initial" id="editor" th:text="${initial}"></textarea>
-                <br>
                 <p><strong>Tests:</strong></p>
-<!--                <ul>-->
-<!--                    <li th:each="test : ${tests}" th:text="${test.getShortForm()}"></li>-->
-<!--                </ul>-->
+                <div id="test-editor">
+                    <p th:if="${tests}">
+                        Click on a test case to update it.
+                    </p>
+                    <ul id="test-list"></ul>
+                    <a class="admin button">ADD TEST CASE</a>
+                </div>
                 <input type="hidden" name="tests" value="">
+                <br>
                 <ul class="button-area">
                     <li><input type="submit" class="admin button" th:value="${confirm}"></li>
-                    <li><a href="javascript:history.back()" class="admin">CANCEL</a></li>
+                    <li><a href="javascript:history.back()" class="admin button">CANCEL</a></li>
                 </ul>
             </form>
+            <script th:src="@{/scripts/edit-tests.js}"></script>
+            <script th:inline="javascript">
+                var testData = JSON.parse([[${tests}]])
+                setup()
+            </script>
             <div th:replace="fragments/editor :: editor-js"></div>
         </div>
     </body>
