@@ -11,6 +11,12 @@ public interface TestCaseRepository extends JpaRepository<TestCase, String> {
 
     List<TestCase> findByChapterAndExercise(int chapter, int exercise);
 
+    default List<TestCase> findWithElements(int chapter, int exercise, TestCaseElementRepository elementDb) {
+        List<TestCase> tests = findByChapterAndExercise(chapter, exercise);
+        tests.forEach(elementDb::addElements);
+        return tests;
+    }
+
     default String getJson(List<TestCase> tests) {
         StringJoiner joiner = new StringJoiner(",", "{", "}");
         tests.forEach(test -> joiner.add(test.getJson()));

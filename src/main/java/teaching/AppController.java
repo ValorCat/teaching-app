@@ -166,8 +166,7 @@ public class AppController {
         if (user == null) {
             return new RedirectView("/login");
         }
-        List<TestCase> tests = testCaseDb.findByChapterAndExercise(chapter, exercise);
-        tests.forEach(test -> testCaseElementDb.addElements(test));
+        List<TestCase> tests = testCaseDb.findWithElements(chapter, exercise, testCaseElementDb);
         String testJson = testCaseDb.getJson(tests);
         TestResults results = ClientCodeExecutor.INSTANCE.execute(attempt, tests, testJson);
         progressDb.updateProgress(user.getUsername(), chapter, exercise, attempt, results.doAllPass());
@@ -190,6 +189,7 @@ public class AppController {
         model.addAttribute("exercises", exerciseDb.findByChapterOrderByNumber(chapter));
         model.addAttribute("completion", progressDb.getCompletionIndex(user.getUsername(), chapter));
         model.addAttribute("exercise", exerciseDb.findOneByChapterAndNumber(chapter, exercise));
+        model.addAttribute("tests", testCaseDb.findWithElements(chapter, exercise, testCaseElementDb));
         return "edit-exercise";
     }
 
