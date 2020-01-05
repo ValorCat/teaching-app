@@ -29,48 +29,6 @@ public class TestCase {
         this.exercise = exercise;
     }
 
-    private String getShortFormBase() {
-        String result = "When I run ";
-        result += testExpression == null ? "the code" : testExpression;
-
-        // add inputs
-        StringJoiner joiner = new StringJoiner(" and");
-        for (TestCaseElement input : inputs) {
-            joiner.add(" " + input.getShortForm());
-        }
-        return result + joiner.toString() + ",";
-    }
-
-    public String getShortForm() {
-        String result = getShortFormBase();
-        StringJoiner outputString = new StringJoiner(" and");
-        for (TestCaseElement output : outputs) {
-            outputString.add(" " + output.getShortForm());
-        }
-        result += outputString.toString() + ".";
-        return result;
-    }
-
-    public String getShortFormWithError(String line, String message) {
-        String result = getShortFormBase();
-        StringJoiner inputString = new StringJoiner(" and");
-        for (TestCaseElement output : outputs) {
-            inputString.add(" " + output.getShortForm());
-        }
-        return String.format("%s%s (line %s threw %s).", result, inputString, line, message);
-    }
-
-    public String getOneElementShortForm(String outputLocation, String foundResult) {
-        String result = getShortFormBase();
-        for (TestCaseElement output : outputs) {
-            if (output.getLocation().equals(outputLocation)) {
-                result += " " + output.getShortForm();
-                break;
-            }
-        }
-        return result + " (found " + foundResult + ").";
-    }
-
     public String getJson() {
         // method probably has a bug with inserting newlines (should they be escaped?)
 

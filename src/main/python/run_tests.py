@@ -1,7 +1,8 @@
 import json
 import sandbox
-import sys
 import traceback
+
+from format_results import build_pass_msg, build_fail_msg, build_error_msg
 
 """
 Input Model:
@@ -23,12 +24,8 @@ Input Model:
 Output Model:
     COMPILE
     NO_COMPILE <line#> <col#> <message>
-
-    CASE <case#> PASS
-    CASE <case#> FAIL <#elements>
-        ELEMENT <location> PASS
-        ELEMENT <location> FAIL <result>
-    CASE <case#> ERROR <line#> <message>
+    PASS <message>
+    FAIL <message>
 """
 
 
@@ -39,26 +36,25 @@ def run_tests(source_code, test_cases):
     # check for syntax errors
     try:
         code = compile(source_code, 'attempt.py', 'exec', dont_inherit=True, optimize=0)
-        output_compile_test()
+        report_compilation()
     except SyntaxError as e:
-        return output_compile_test(e)
+        return report_compilation(e)
 
     # check each test case
     for case_id, case_data in test_cases.items():
-        test_snippet = case_data.get('test')
-        test_output = None
-        inputs, outputs = case_data['inputs'], case_data['outputs']
+        inputs, outputs = case_data['inputs'].copy(), case_data['outputs'].copy()
         stdin_buffer = inputs.pop('<stdin>', '')
+        test_output = None
 
         # switch to sandbox env
         with sandbox.Sandbox(stdin_buffer, inputs) as env:
             exec(code, env.vars)
-            if test_snippet:
-                test_output = eval(test_snippet, env.vars)
+            if 'test' in case_data:
+                test_output = eval(case_data['test'], env.vars)
 
         # if the sandbox exited with an exception
         if env and env.exception:
-            output_test_error(case_id, env.exception)
+            report_error(case_data, env.exception)
             continue  # skip to next test case
 
         case_results = {}
@@ -88,35 +84,34 @@ def run_tests(source_code, test_cases):
 
         # output results
         if case_success:
-            output_test_pass(case_id)
+            report_pass(case_data)
         else:
-            output_test_fail(case_id, case_results)
+            for location in case_results:
+                success, result = case_results[location]
+                if success:
+                    report_pass(case_data)
+                else:
+                    report_fail(case_data, location, result)
 
 
-def output_test_pass(case_id):
-    print(f'CASE {case_id} PASS')
+def report_pass(case_data):
+    print(f'PASS {build_pass_msg(case_data)}')
 
 
-def output_test_fail(case_id, case_results):
-    print(f'CASE {case_id} FAIL {len(case_results)}')
-    for location in case_results:
-        success, result = case_results[location]
-        if success:
-            print(f'ELEMENT {location} PASS')
-        else:
-            print(f'ELEMENT {location} FAIL {repr(result)}')
+def report_fail(case_data, location, result):
+    print(f'FAIL {build_fail_msg(case_data, location, result)}')
 
 
-def output_test_error(case_id, err: BaseException):
+def report_error(case_data, err: BaseException):
     # get line number in user's code that raised the error
     err_line = '?'
     for frame, line in traceback.walk_tb(err.__traceback__):
         if frame.f_code.co_filename == 'attempt.py':
             err_line = line
-    print(f'CASE {case_id} ERROR {err_line} {type(err).__name__}: {err}')
+    print(f'FAIL {err_line} {build_error_msg(case_data, err_line, err)}')
 
 
-def output_compile_test(err: SyntaxError = None):
+def report_compilation(err: SyntaxError = None):
     if not err:
         print('COMPILE')
     else:

@@ -168,7 +168,7 @@ public class AppController {
         }
         List<TestCase> tests = testCaseDb.findWithElements(chapter, exercise, testCaseElementDb);
         String testJson = testCaseDb.getJson(tests);
-        TestResults results = ClientCodeExecutor.INSTANCE.execute(attempt, tests, testJson);
+        TestResults results = ClientCodeExecutor.INSTANCE.execute(attempt, testJson);
         progressDb.updateProgress(user.getUsername(), chapter, exercise, attempt, results.doAllPass());
         if (results.hasError()) {
             redirectAttributes.addFlashAttribute("error", results);

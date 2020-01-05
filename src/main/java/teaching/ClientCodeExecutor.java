@@ -1,6 +1,5 @@
 package teaching;
 
-import teaching.model.TestCase;
 import teaching.model.TestResult;
 import teaching.model.TestResults;
 
@@ -9,10 +8,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class ClientCodeExecutor {
@@ -21,7 +18,7 @@ public class ClientCodeExecutor {
 
     private ClientCodeExecutor() {}
 
-    public TestResults execute(String code, List<TestCase> tests, String testJson) {
+    public TestResults execute(String code, String tests) {
         ProcessBuilder builder = new ProcessBuilder("python", "src/main/python/run_tests.py");
         try {
             Process process = builder.start();
@@ -29,9 +26,9 @@ public class ClientCodeExecutor {
             // passes in inputs (code and test cases)
             PrintWriter writer = new PrintWriter(process.getOutputStream());
             writer.println(encodeWhitespace(code));
-            writer.println(encodeWhitespace(testJson));
+            writer.println(encodeWhitespace(tests));
             writer.close();
-            process.waitFor();
+            process.waitFor(5, TimeUnit.SECONDS);
 
             // process test results
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -54,8 +51,7 @@ public class ClientCodeExecutor {
             }
 
             // the code successfully compiled
-            Map<Integer, TestCase> testIndex = buildCaseIndex(tests);
-            TestResults results = getResults(testIndex, reader);
+            TestResults results = getResults(reader);
             reader.close();
             return results;
         } catch (IOException | InterruptedException e) {
@@ -63,43 +59,17 @@ public class ClientCodeExecutor {
         }
     }
 
-    private Map<Integer, TestCase> buildCaseIndex(List<TestCase> tests) {
-        return tests.stream().collect(Collectors.toMap(TestCase::getId, Function.identity()));
-    }
-
-    private TestResults getResults(Map<Integer, TestCase> tests, BufferedReader reader) throws IOException {
-        List<TestResult> results = new ArrayList<>();
+    private TestResults getResults(BufferedReader reader) throws IOException {
+        List<TestResult> results = new ArrayList<>(5);
+        boolean allPass = true;
         String line;
         while ((line = reader.readLine()) != null) {
-            String[] parts = line.split(" ", 5);
-            TestCase test = tests.get(Integer.parseInt(parts[1]));
-            results.addAll(parseCase(parts, test, reader));
-        }
-        boolean allPass = true;
-        for (TestResult result : results) {
-            allPass &= result.isPass();
+            boolean pass = line.startsWith("PASS");
+            String message = line.substring(5);
+            results.add(new TestResult(pass, message));
+            allPass &= pass;
         }
         return new TestResults(results, allPass);
-    }
-
-    private List<TestResult> parseCase(String[] line, TestCase test, BufferedReader reader) throws IOException {
-        switch (line[2]) {
-            case "PASS":
-                return Collections.singletonList(new TestResult(true, test.getShortForm()));
-            case "ERROR":
-                return Collections.singletonList(new TestResult(false, test.getShortFormWithError(line[3], line[4])));
-            case "FAIL":
-                int numElements = Integer.parseInt(line[3]);
-                List<TestResult> results = new ArrayList<>(numElements);
-                for (int i = 0; i < numElements; i++) {
-                    String[] elementLine = reader.readLine().split(" ", 4);
-                    boolean status = elementLine[2].equals("PASS");
-                    String message = test.getOneElementShortForm(elementLine[1], elementLine[3]);
-                    results.add(new TestResult(status, message));
-                }
-                return results;
-        }
-        throw new IllegalArgumentException();
     }
 
     private static String encodeWhitespace(String text) {
