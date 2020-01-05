@@ -21,10 +21,10 @@ import java.util.Optional;
 @Controller
 public class AppController {
 
-    @Autowired AccountRepository accountDb;
-    @Autowired ChapterRepository chapterDb;
-    @Autowired ExerciseRepository exerciseDb;
-    @Autowired ProgressRepository progressDb;
+    @Autowired private AccountRepository accountTable;
+    @Autowired private ChapterRepository chapterTable;
+    @Autowired private ExerciseRepository exerciseTable;
+    @Autowired private ProgressRepository progressTable;
 
     @GetMapping("/")
     public String root(HttpSession session) {
@@ -48,9 +48,9 @@ public class AppController {
 
     @PostMapping("/login")
     public String processLogin(HttpSession session, String username, String password) {
-        Optional<Account> account = accountDb.findByUsernameAndPassword(username, Account.hashPassword(password));
+        Optional<Account> account = accountTable.findByUsernameAndPassword(username, Account.hashPassword(password));
         if (account.isPresent()) {
-            accountDb.updateLastLoginTime(account.get());
+            accountTable.updateLastLoginTime(account.get());
             session.setAttribute("user", account.get());
             session.setMaxInactiveInterval(3600);
             return "redirect:/chapters";
@@ -66,13 +66,13 @@ public class AppController {
 
     @PostMapping("/register")
     public String processRegistration(HttpSession session, String username, String password) {
-        Optional<Account> account = accountDb.findByUsername(username);
+        Optional<Account> account = accountTable.findByUsername(username);
         if (account.isPresent()) {
             return "redirect:/register?taken";
         } else if (username.isEmpty() || password.isEmpty()) {
             return "redirect:/register?empty";
         } else {
-            Account newAccount = accountDb.create(username, password, "user");
+            Account newAccount = accountTable.create(username, password, "user");
             session.setAttribute("user", newAccount);
             session.setMaxInactiveInterval(3600);
             return "redirect:/chapters";
@@ -86,8 +86,8 @@ public class AppController {
             return "redirect:/login";
         }
         model.addAttribute("user", user);
-        model.addAttribute("chapters", chapterDb.getChapterData(exerciseDb));
-        model.addAttribute("progress", progressDb.getChapterProgressIndex(user.getUsername()));
+        model.addAttribute("chapters", chapterTable.getChapterData(exerciseTable));
+        model.addAttribute("progress", progressTable.getChapterProgressIndex(user.getUsername()));
         return "chapter-list";
     }
 
@@ -99,8 +99,8 @@ public class AppController {
         }
         model.addAttribute("user", user);
         model.addAttribute("chapter", chapter);
-        model.addAttribute("exercises", exerciseDb.findByChapterOrderByNumber(chapter));
-        model.addAttribute("completion", progressDb.getCompletionIndex(user.getUsername(), chapter));
+        model.addAttribute("exercises", exerciseTable.findByChapterOrderByNumber(chapter));
+        model.addAttribute("completion", progressTable.getCompletionIndex(user.getUsername(), chapter));
         model.addAttribute("exercise", null);
         return "attempt-exercise";
     }
@@ -112,17 +112,17 @@ public class AppController {
         if (user == null) {
             return "redirect:/login";
         }
-        List<Exercise> exercises = exerciseDb.findByChapterOrderByNumber(chapter);
+        List<Exercise> exercises = exerciseTable.findByChapterOrderByNumber(chapter);
         if (exercises.isEmpty()) {
             return "redirect:..";
         }
-        Exercise exerciseData = exerciseDb.findOneByChapterAndNumber(chapter, exercise);
-        Optional<Progress> progress = progressDb.findByAccountAndChapterAndExercise(user.getUsername(), chapter, exercise);
+        Exercise exerciseData = exerciseTable.findOneByChapterAndNumber(chapter, exercise);
+        Optional<Progress> progress = progressTable.findByAccountAndChapterAndExercise(user.getUsername(), chapter, exercise);
         String code = progress.map(Progress::getCode).orElse(exerciseData.getInitial());
         model.addAttribute("user", user);
         model.addAttribute("chapter", chapter);
         model.addAttribute("exercises", exercises);
-        model.addAttribute("completion", progressDb.getCompletionIndex(user.getUsername(), chapter));
+        model.addAttribute("completion", progressTable.getCompletionIndex(user.getUsername(), chapter));
         model.addAttribute("exercise", exerciseData);
         model.addAttribute("code", code);
         Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
@@ -140,8 +140,8 @@ public class AppController {
         }
         model.addAttribute("user", user);
         model.addAttribute("chapter", chapter);
-        model.addAttribute("exercises", exerciseDb.findByChapterOrderByNumber(chapter));
-        model.addAttribute("completion", progressDb.getCompletionIndex(user.getUsername(), chapter));
+        model.addAttribute("exercises", exerciseTable.findByChapterOrderByNumber(chapter));
+        model.addAttribute("completion", progressTable.getCompletionIndex(user.getUsername(), chapter));
         return "create-exercise";
     }
 
@@ -152,8 +152,8 @@ public class AppController {
         if (user == null || !user.getRole().equals("admin")) {
             return "redirect:/login";
         }
-        int id = 1 + exerciseDb.findMaxByChapter(chapter);
-        exerciseDb.create(chapter, id, id, name, text, initial, tests);
+        int id = 1 + exerciseTable.findMaxByChapter(chapter);
+        exerciseTable.create(chapter, id, id, name, text, initial, tests);
         return "redirect:exercise/" + id;
     }
 
@@ -164,9 +164,9 @@ public class AppController {
         if (user == null) {
             return new RedirectView("/login");
         }
-        String testJson = exerciseDb.findOneByChapterAndNumber(chapter, exercise).getTests();
+        String testJson = exerciseTable.findOneByChapterAndNumber(chapter, exercise).getTests();
         TestResults results = ClientCodeExecutor.INSTANCE.execute(attempt, testJson);
-        progressDb.updateProgress(user.getUsername(), chapter, exercise, attempt, results.doAllPass());
+        progressTable.updateProgress(user.getUsername(), chapter, exercise, attempt, results.doAllPass());
         if (results.hasError()) {
             redirectAttributes.addFlashAttribute("error", results);
         } else {
@@ -183,9 +183,9 @@ public class AppController {
         }
         model.addAttribute("user", user);
         model.addAttribute("chapter", chapter);
-        model.addAttribute("exercises", exerciseDb.findByChapterOrderByNumber(chapter));
-        model.addAttribute("completion", progressDb.getCompletionIndex(user.getUsername(), chapter));
-        model.addAttribute("exercise", exerciseDb.findOneByChapterAndNumber(chapter, exercise));
+        model.addAttribute("exercises", exerciseTable.findByChapterOrderByNumber(chapter));
+        model.addAttribute("completion", progressTable.getCompletionIndex(user.getUsername(), chapter));
+        model.addAttribute("exercise", exerciseTable.findOneByChapterAndNumber(chapter, exercise));
         return "edit-exercise";
     }
 
@@ -196,7 +196,7 @@ public class AppController {
         if (user == null || !user.getRole().equals("admin")) {
             return "redirect:/login";
         }
-        exerciseDb.update(chapter, exercise, name, text, initial, tests);
+        exerciseTable.update(chapter, exercise, name, text, initial, tests);
         return "redirect:../" + exercise;
     }
 
@@ -207,7 +207,7 @@ public class AppController {
         if (user == null || !user.getRole().equals("admin")) {
             return "redirect:/login";
         }
-        exerciseDb.deleteByChapterAndId(chapter, exercise);
+        exerciseTable.deleteByChapterAndId(chapter, exercise);
         return "redirect:../1";
     }
 
