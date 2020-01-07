@@ -3,10 +3,10 @@
 
 function setup() {
     var htmlList = document.getElementById('test-list')
+    var prototype = document.getElementById('test-prototype')
     for (var test of testData) {
-        var header = document.createElement('p')
-        header.innerHTML = collapse(test)
-        header.classList.add('accordion')
+        var header = prototype.firstElementChild.cloneNode(true)
+        header.innerHTML += collapse(test)
         header.addEventListener('click', function() {
             this.classList.toggle('open')
             var panel = this.nextElementSibling
@@ -14,9 +14,7 @@ function setup() {
         })
         htmlList.appendChild(header)
 
-        var panel = document.createElement('div')
-        panel.innerHTML = 'content'
-        panel.classList.add('panel')
+        var panel = prototype.lastElementChild.cloneNode(true)
         htmlList.appendChild(panel)
     }
 }

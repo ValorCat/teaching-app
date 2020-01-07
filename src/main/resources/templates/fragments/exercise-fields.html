@@ -23,6 +23,10 @@
                     <li><a href="javascript:history.back()" class="admin button">CANCEL</a></li>
                 </ul>
             </form>
+            <div hidden id="test-prototype">
+                <p class="accordion"><strong>Test: </strong></p>
+                <div class="panel">content</div>
+            </div>
             <script th:src="@{/scripts/edit-tests.js}"></script>
             <script th:inline="javascript">
                 var testData = JSON.parse([[${tests}]])
