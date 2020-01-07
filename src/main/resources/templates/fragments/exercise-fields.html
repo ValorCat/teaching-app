@@ -12,10 +12,8 @@
                 <textarea name="initial" id="editor" th:text="${initial}"></textarea>
                 <p><strong>Tests:</strong></p>
                 <div id="test-editor">
-                    <p th:if="${tests}">
-                        Click on a test case to update it.
-                    </p>
-                    <ul id="test-list"></ul>
+                    <p>Click on a test case to update it.</p>
+                    <div id="test-list"></div>
                     <a class="admin button">ADD TEST CASE</a>
                 </div>
                 <input type="hidden" name="tests" value="">

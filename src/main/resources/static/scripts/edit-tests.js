@@ -4,9 +4,20 @@
 function setup() {
     var htmlList = document.getElementById('test-list')
     for (var test of testData) {
-        var li = document.createElement('li')
-        li.innerHTML = collapse(test)
-        htmlList.appendChild(li)
+        var header = document.createElement('p')
+        header.innerHTML = collapse(test)
+        header.classList.add('accordion')
+        header.addEventListener('click', function() {
+            this.classList.toggle('open')
+            var panel = this.nextElementSibling
+            panel.style.maxHeight = panel.style.maxHeight ? null : panel.scrollHeight + "px"
+        })
+        htmlList.appendChild(header)
+
+        var panel = document.createElement('div')
+        panel.innerHTML = 'content'
+        panel.classList.add('panel')
+        htmlList.appendChild(panel)
     }
 }
 
