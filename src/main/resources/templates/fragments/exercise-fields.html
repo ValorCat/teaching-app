@@ -12,21 +12,54 @@
                 <textarea name="initial" id="editor" th:text="${initial}"></textarea>
                 <p><strong>Tests:</strong></p>
                 <div id="test-editor">
-                    <p>Click on a test case to update it.</p>
+                    <p>Click on a test case to start modifying it.</p>
                     <div id="test-list"></div>
-                    <a class="admin button">ADD TEST CASE</a>
+                    <a class="small admin button">ADD TEST CASE</a>
                 </div>
                 <input type="hidden" name="tests" value="">
                 <br>
                 <ul class="button-area">
                     <li><input type="submit" class="admin button" th:value="${confirm}"></li>
-                    <li><a href="javascript:history.back()" class="admin button">CANCEL</a></li>
+                    <li><a href="javascript:history.back()" class="caution button">CANCEL</a></li>
                 </ul>
             </form>
-            <div hidden id="test-prototype">
+
+            <div hidden id="accordion-prototype">
                 <p class="accordion"><strong>Test: </strong></p>
-                <div class="panel">content</div>
             </div>
+            <div hidden id="panel-prototype">
+                <div class="panel">
+                    <div>
+                        Test the entire submission
+                    </div>
+                    <strong>Provided Inputs:</strong>
+                    <div class="subsection">
+                        <i>None</i>
+                    </div>
+                    <strong>Expected Outputs:</strong>
+                    <div class="subsection">
+                        <i>None</i>
+                    </div>
+                    <a class="small admin button">TOGGLE TEST TYPE</a>
+                    <div class="dropdown">
+                        <a onclick="toggleDropdown(this)" class="small admin button dropdown-button">ADD INPUT ▼</a>
+                        <div class="dropdown-content">
+                            <p>From the console</p>
+                            <p>From a file</p>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <a onclick="toggleDropdown(this)" class="small admin button dropdown-button">ADD OUTPUT ▼</a>
+                        <div class="dropdown-content">
+                            <p>As a return value</p>
+                            <p>On the console</p>
+                            <p>To a file</p>
+                        </div>
+                    </div>
+                    <a class="small caution button">DROP TEST</a>
+                </div>
+            </div>
+
             <script th:src="@{/scripts/edit-tests.js}"></script>
             <script th:inline="javascript">
                 var testData = JSON.parse([[${tests}]])

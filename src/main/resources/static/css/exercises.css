@@ -121,6 +121,10 @@ h2, #name-editor {
   background-color: royalblue;
 }
 
+.button.caution {
+  background-color: firebrick;
+}
+
 table {
   border-collapse: collapse;
 }
@@ -156,7 +160,7 @@ p.error {
 #test-editor {
   padding: 10px;
   border: 1px solid rgb(169, 169, 169);
-  width: 60%;
+  width: 70%;
   background: #f2f2f2;
 }
 
@@ -166,10 +170,13 @@ p.error {
   text-align: center;
 }
 
-#test-editor .button {
-  width: 130px;
+.button.small {
+  width: fit-content;
   font-size: 13px;
   padding: 7px;
+}
+
+#test-editor > .button {
   margin-top: 15px;
 }
 
@@ -184,7 +191,7 @@ p.error {
 }
 
 .accordion.open {
-  background-color: #82e786;
+  background-color: #82d866;
 }
 
 .accordion:hover {
@@ -199,6 +206,56 @@ p.error {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.2s ease-out;
+}
+
+.panel.open {
+  overflow: visible;
+}
+
+.panel > :first-child {
+  margin-top: 0;
+  padding: 10px 0;
+}
+
+.panel > a {
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.panel > .button.small {
+  margin-top: 10px;
+}
+
+.subsection {
+  margin: 6px 12px;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content p {
+  margin: 0;
+  padding: 6px;
+  font-size: smaller;
+}
+
+.dropdown-content p:hover {
+  background-color: #ddd;
+}
+
+.active-dropdown {
+  display: block;
 }
 
 body {

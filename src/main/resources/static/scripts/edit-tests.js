@@ -3,20 +3,41 @@
 
 function setup() {
     var htmlList = document.getElementById('test-list')
-    var prototype = document.getElementById('test-prototype')
     for (var test of testData) {
-        var header = prototype.firstElementChild.cloneNode(true)
+        // build accordion
+        var header = document.getElementById('accordion-prototype').firstElementChild.cloneNode(true)
         header.innerHTML += collapse(test)
         header.addEventListener('click', function() {
             this.classList.toggle('open')
             var panel = this.nextElementSibling
             panel.style.maxHeight = panel.style.maxHeight ? null : panel.scrollHeight + "px"
+            panel.classList.toggle('open')
         })
         htmlList.appendChild(header)
 
-        var panel = prototype.lastElementChild.cloneNode(true)
+        // build content panel
+        var panel = document.getElementById('panel-prototype').lastElementChild.cloneNode(true)
         htmlList.appendChild(panel)
     }
+}
+
+/* DROPDOWN BUTTONS ================================================= */
+
+var lastDropdown = null
+
+function toggleDropdown(element) {
+    lastDropdown = element.nextElementSibling
+    lastDropdown.classList.toggle('active-dropdown')
+}
+
+// close dropdowns when user clicks somewhere else
+window.onclick = function(event) {
+    for (var dropdown of document.getElementsByClassName('dropdown-content')) {
+        if (dropdown !== lastDropdown && dropdown.classList.contains('active-dropdown')) {
+            dropdown.classList.remove('active-dropdown')
+        }
+    }
+    lastDropdown = null
 }
 
 /* COLLAPSE TESTS ================================================= */
