@@ -12,10 +12,8 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.RedirectView;
 import teaching.model.*;
 
-import javax.servlet.SessionTrackingMode;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -54,7 +52,6 @@ public class AppController {
         if (account.isPresent()) {
             accountTable.updateLastLoginTime(account.get());
             session.setAttribute("user", account.get());
-            session.getServletContext().setSessionTrackingModes(EnumSet.of(SessionTrackingMode.COOKIE));
             session.setMaxInactiveInterval(3600);
             return "redirect:/chapters";
         } else {
@@ -77,7 +74,6 @@ public class AppController {
         } else {
             Account newAccount = accountTable.create(username, password, "user");
             session.setAttribute("user", newAccount);
-            session.getServletContext().setSessionTrackingModes(EnumSet.of(SessionTrackingMode.COOKIE));
             session.setMaxInactiveInterval(3600);
             return "redirect:/chapters";
         }
