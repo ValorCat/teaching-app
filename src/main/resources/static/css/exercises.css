@@ -191,7 +191,9 @@ p.error {
 }
 
 .accordion.open {
-  background-color: #82d866;
+  background-color: seagreen;
+  color: white;
+  font-weight: bold;
 }
 
 .accordion:hover {
@@ -212,9 +214,27 @@ p.error {
   overflow: visible;
 }
 
-.panel > :first-child {
+.panel > :nth-child(1),
+.panel > :nth-child(2) {
   margin-top: 0;
   padding: 10px 0;
+}
+
+.panel > :last-child {
+  float: right;
+}
+
+.panel input[type=text] {
+  padding: 3px;
+  border: none;
+  border-bottom: 1px solid forestgreen;
+  background: none;
+  width: 40%;
+  font-family: monospace;
+}
+
+.panel input[type=text].short {
+  width: 130px;
 }
 
 .panel > a {
@@ -230,6 +250,21 @@ p.error {
   margin: 6px 12px;
 }
 
+.subsection div {
+  margin: 8px 0;
+}
+
+.x.button {
+  width: 13px;
+  height: 13px;
+  font-size: 9px;
+  font-weight: normal;
+  padding: 3px;
+  border-radius: 15px;
+  background-color: firebrick;
+  display: inline-block;
+}
+
 .dropdown {
   position: relative;
   display: inline-block;
@@ -239,6 +274,7 @@ p.error {
   display: none;
   position: absolute;
   background-color: #f1f1f1;
+  cursor: pointer;
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;

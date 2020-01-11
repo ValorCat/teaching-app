@@ -18,6 +18,20 @@ function setup() {
         // build content panel
         var panel = document.getElementById('panel-prototype').lastElementChild.cloneNode(true)
         htmlList.appendChild(panel)
+
+        // add test snippet
+        if (test.test) {
+            toggleType(panel)
+            panel.querySelector('.test-snippet input').value = test.test
+        }
+
+        // add inputs/outputs
+        for (input in test.inputs) {
+            addIO(panel, convertIOLocation(input, 'input'), 'input')
+        }
+        for (output in test.outputs) {
+            addIO(panel, convertIOLocation(output, 'output'), 'output')
+        }
     }
 }
 
@@ -39,6 +53,60 @@ window.onclick = function(event) {
     }
     lastDropdown = null
 }
+
+/* MODIFY TEST PROPERTIES =================================================== */
+
+ function toggleType(element) {
+    var panel = element.closest('.panel')
+    var testAllLine = panel.getElementsByClassName('test-all')[0]
+    var testSnippetLine = panel.getElementsByClassName('test-snippet')[0]
+    testAllLine.hidden = !testAllLine.hidden
+    testSnippetLine.hidden = !testSnippetLine.hidden
+ }
+
+function addIO(element, source, ioType) {
+    var panel = element.closest('.panel')
+    var lines = panel.getElementsByClassName(ioType)[0]
+    if (lines.firstElementChild.innerText === 'None') {
+        lines.removeChild(lines.firstElementChild)
+    }
+    var prototype = document.getElementById('io-prototype')
+    var newLine = prototype.getElementsByClassName(source)[0].cloneNode(true)
+    var dropButton = prototype.getElementsByClassName('button')[0].cloneNode(true)
+    newLine.appendChild(dropButton)
+    lines.appendChild(newLine)
+    if (panel.classList.contains('open')) {
+        panel.style.maxHeight = panel.scrollHeight + "px"
+    }
+}
+
+function dropTest(button) {
+    var panel = button.parentElement
+    var header = panel.previousElementSibling
+    panel.remove()
+    header.remove()
+}
+
+function dropIO(element) {
+    var line = element.parentElement
+    var section = line.parentElement
+    section.removeChild(line)
+    if (section.childElementCount === 0) {
+        var none = document.createElement('i')
+        none.innerHTML = 'None'
+        section.appendChild(none)
+    }
+}
+
+function convertIOLocation(location, ioType) {
+    switch (location) {
+        case '<stdin>':     return 'stdin'
+        case '<stdout>':    return 'stdout'
+        case '<return>':    return 'return'
+        default:            return ioType === 'input' ? 'infile' : 'outfile'
+    }
+}
+
 
 /* COLLAPSE TESTS ================================================= */
 
