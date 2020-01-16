@@ -26,11 +26,13 @@ function setup() {
         }
 
         // add inputs/outputs
-        for (input in test.inputs) {
-            addIO(panel, convertIOLocation(input, 'input'), 'input')
+        for (var loc in test.inputs) {
+            var testLoc = convertIOLocation(loc, 'input')
+            addInitialIO(panel, testLoc, 'input', loc, test.inputs[loc])
         }
-        for (output in test.outputs) {
-            addIO(panel, convertIOLocation(output, 'output'), 'output')
+        for (var loc in test.outputs) {
+            var testLoc = convertIOLocation(loc, 'output')
+            addInitialIO(panel, testLoc, 'output', loc, test.outputs[loc])
         }
     }
 }
@@ -62,7 +64,18 @@ window.onclick = function(event) {
     var testSnippetLine = panel.getElementsByClassName('test-snippet')[0]
     testAllLine.hidden = !testAllLine.hidden
     testSnippetLine.hidden = !testSnippetLine.hidden
- }
+}
+
+function addInitialIO(panel, source, ioType, location, content) {
+    var newLine = addIO(panel, source, ioType)
+    var fields = newLine.getElementsByTagName('input')
+    if (fields.length == 1) {
+        fields[0].value = content
+    } else if (fields.length == 2) {
+        fields[0].value = location
+        fields[1].value = content
+    }
+}
 
 function addIO(element, source, ioType) {
     var panel = element.closest('.panel')
@@ -78,6 +91,7 @@ function addIO(element, source, ioType) {
     if (panel.classList.contains('open')) {
         panel.style.maxHeight = panel.scrollHeight + "px"
     }
+    return newLine
 }
 
 function dropTest(button) {
