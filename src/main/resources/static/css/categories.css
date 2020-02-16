@@ -39,6 +39,21 @@ tr.active a:hover {
   text-decoration: underline;
 }
 
+#info-panel {
+  position: fixed;
+  top: 8%;
+  left: 45%;
+  right: 1%;
+  background: #eee;
+  padding: 15px;
+  padding-top: 0px;
+}
+
+#info-panel h2,
+#info-panel strong {
+  color: darkgreen;
+}
+
 body {
   font-family: sans-serif;
 }

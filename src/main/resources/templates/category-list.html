@@ -23,5 +23,22 @@
                 <td th:text="${progress.getOrDefault(c.category.number, 0)} + ' / ' + ${c.exerciseCount}"></td>
             </tr>
         </table>
+        <div id="info-panel">
+            <h2>Welcome to Adept Python!</h2>
+            <p>
+                <strong>Adept Python</strong> is a repository of short Python exercises to help you practice your
+                problem-solving skills. You can run through all the exercises sequentially, or focus only on specific
+                categories of problems. Check out the different categories on the left to get started.
+            </p>
+            <p>
+                This site uses a limited version of Python 3.7. Certain functions related to graphics, audio, and the
+                underlying operating system's facilities have been disabled. You can practice these on your own system,
+                but you'll never need them to solve a problem on this site. Want to read up on Python 3.7? Check out
+                the official documentation at <a href="https://docs.python.org/3.7/">docs.python.org</a>.
+            </p>
+            <p>
+                Questions or concerns? Contact Anthony Morrell at <a href="mailto://morrellaj@g.cofc.edu">morrellaj@g.cofc.edu</a>.
+            </p>
+        </div>
     </body>
 </html>

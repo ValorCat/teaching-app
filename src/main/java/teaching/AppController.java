@@ -177,11 +177,11 @@ public class AppController {
 
     @GetMapping("/category/{category}/exercise/{exercise}/edit")
     public String edit(HttpSession session, Model model, @PathVariable int category, @PathVariable int exercise) {
-//        Account user = (Account) session.getAttribute("user");
-//        if (user == null || !user.getRole().equals("admin")) {
-//            return "redirect:/login";
-//        }
-        Account user = accountTable.getOne("a");
+        Account user = (Account) session.getAttribute("user");
+        if (user == null || !user.getRole().equals("admin")) {
+            return "redirect:/login";
+        }
+        //Account user = accountTable.getOne("a");
         model.addAttribute("user", user);
         model.addAttribute("category", category);
         model.addAttribute("exercises", exerciseTable.findByCategoryOrderByNumber(category));
