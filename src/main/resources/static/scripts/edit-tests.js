@@ -2,22 +2,9 @@
 /* INITIALIZE HTML ================================================= */
 
 function setup() {
-    var htmlList = document.getElementById('test-list')
     for (var test of testData) {
-        // build accordion
-        var header = document.getElementById('accordion-prototype').firstElementChild.cloneNode(true)
-        header.innerHTML += collapse(test)
-        header.addEventListener('click', function() {
-            this.classList.toggle('open')
-            var panel = this.nextElementSibling
-            panel.style.maxHeight = panel.style.maxHeight ? null : panel.scrollHeight + "px"
-            panel.classList.toggle('open')
-        })
-        htmlList.appendChild(header)
-
-        // build content panel
-        var panel = document.getElementById('panel-prototype').lastElementChild.cloneNode(true)
-        htmlList.appendChild(panel)
+        // build panel
+        var panel = addTestPanel(collapse(test))
 
         // add test snippet
         if (test.test) {
@@ -35,6 +22,28 @@ function setup() {
             addInitialIO(panel, testLoc, 'output', loc, test.outputs[loc])
         }
     }
+}
+
+function addTestPanel(title) {
+    // build accordion header
+    var header = document.getElementById('accordion-prototype').firstElementChild.cloneNode(true)
+    header.innerHTML += title //collapse(test)
+    header.addEventListener('click', function() {
+        this.classList.toggle('open')
+        var panel = this.nextElementSibling
+        panel.style.maxHeight = panel.style.maxHeight ? null : panel.scrollHeight + "px"
+        panel.classList.toggle('open')
+    })
+
+    // build content panel
+    var panel = document.getElementById('panel-prototype').lastElementChild.cloneNode(true)
+
+    // display header and panel
+    var htmlList = document.getElementById('test-list')
+    htmlList.appendChild(header)
+    htmlList.appendChild(panel)
+
+    return panel
 }
 
 /* SUBMIT BUTTON ================================================= */
