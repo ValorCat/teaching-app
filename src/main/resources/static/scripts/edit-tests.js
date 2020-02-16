@@ -39,6 +39,27 @@ function setup() {
 
 /* DROPDOWN BUTTONS ================================================= */
 
+function save() {
+    // read visible form
+    var fields = {
+        name: document.getElementById('name-editor').value,
+        text: document.getElementById('text-editor').value,
+        initial: document.getElementById('editor').value,
+        tests: ''
+    }
+
+    // populate hidden form
+    var realForm = document.getElementById('submit-form')
+    for (var field of realForm.childNodes) {
+        field.value = fields[field.name]
+    }
+
+    // submit form
+    realForm.submit()
+}
+
+/* DROPDOWN BUTTONS ================================================= */
+
 var lastDropdown = null
 
 function toggleDropdown(element) {

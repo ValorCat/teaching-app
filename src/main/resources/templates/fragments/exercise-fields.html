@@ -3,30 +3,39 @@
     <head></head>
     <body>
         <div class="problem" th:fragment="exercise-fields(name, text, initial, tests, confirm)">
-            <form method="post">
-                <input type="text" name="name" id="name-editor" th:value="${name}">
+                <input type="text" id="name-editor" th:value="${name}">
+
                 <p><strong>Instructions:</strong></p>
-                <textarea name="text" id="text-editor" th:text="${text}"></textarea>
+                <textarea id="text-editor" th:text="${text}"></textarea>
                 <br>
+
                 <p><strong>Starting Code:</strong></p>
-                <textarea name="initial" id="editor" th:text="${initial}"></textarea>
+                <textarea id="editor" th:text="${initial}"></textarea>
+
                 <p><strong>Tests:</strong></p>
                 <div id="test-editor">
                     <p>Click on a test case to start modifying it.</p>
                     <div id="test-list"></div>
                     <a class="small admin button">ADD TEST CASE</a>
                 </div>
-                <input type="hidden" name="tests" value="">
                 <br>
+
                 <ul class="button-area">
-                    <li><input type="submit" class="admin button" th:value="${confirm}"></li>
+                    <li><button class="admin button" th:text="${confirm}" onclick="save()"></button></li>
                     <li><a href="javascript:history.back()" class="caution button">CANCEL</a></li>
                 </ul>
+
+            <form hidden method="post" id="submit-form">
+                <input type="hidden" name="name">
+                <input type="hidden" name="text">
+                <input type="hidden" name="initial">
+                <input type="hidden" name="tests">
             </form>
 
             <div hidden id="accordion-prototype">
                 <p class="accordion"><strong>Test: </strong></p>
             </div>
+
             <div hidden id="panel-prototype">
                 <div class="panel">
                     <div class="test-all">
