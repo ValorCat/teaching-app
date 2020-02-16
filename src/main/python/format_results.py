@@ -37,4 +37,5 @@ def build_error_msg(case: dict, line: int, error):
     test = case.get('test', 'the code')
     inputs = _translate_all(case['inputs'], map_inputs)
     outputs = _translate_all(case['outputs'], map_outputs)
-    return f"When I run {test}{inputs},{outputs} (line {line} threw {type(error).__name__}: {error})."
+    location = f'line {line}' if line >= 0 else 'test'
+    return f"When I run {test}{inputs},{outputs} ({location} raised {type(error).__name__}: {error})."

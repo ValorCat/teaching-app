@@ -104,11 +104,11 @@ def report_fail(case_data, location, result):
 
 def report_error(case_data, err: BaseException):
     # get line number in user's code that raised the error
-    err_line = '?'
+    err_line = -1
     for frame, line in traceback.walk_tb(err.__traceback__):
         if frame.f_code.co_filename == 'attempt.py':
             err_line = line
-    print(f'FAIL {err_line} {build_error_msg(case_data, err_line, err)}')
+    print(f'FAIL {build_error_msg(case_data, err_line, err)}')
 
 
 def report_compilation(err: SyntaxError = None):
