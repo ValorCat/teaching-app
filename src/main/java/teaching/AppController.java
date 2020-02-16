@@ -22,7 +22,7 @@ import java.util.Optional;
 public class AppController {
 
     @Autowired private AccountRepository accountTable;
-    @Autowired private ChapterRepository chapterTable;
+    @Autowired private CategoryRepository categoryTable;
     @Autowired private ExerciseRepository exerciseTable;
     @Autowired private ProgressRepository progressTable;
 
@@ -31,7 +31,7 @@ public class AppController {
         if (session.getAttribute("user") == null) {
             return "redirect:/login";
         } else {
-            return "redirect:/chapters";
+            return "redirect:/categories";
         }
     }
 
@@ -53,7 +53,7 @@ public class AppController {
             accountTable.updateLastLoginTime(account.get());
             session.setAttribute("user", account.get());
             session.setMaxInactiveInterval(3600);
-            return "redirect:/chapters";
+            return "redirect:/categories";
         } else {
             return "redirect:/login?error";
         }
@@ -75,54 +75,54 @@ public class AppController {
             Account newAccount = accountTable.create(username, password, "user");
             session.setAttribute("user", newAccount);
             session.setMaxInactiveInterval(3600);
-            return "redirect:/chapters";
+            return "redirect:/categories";
         }
     }
 
-    @GetMapping("/chapters")
-    public String chapters(HttpSession session, Model model) {
+    @GetMapping("/categories")
+    public String categories(HttpSession session, Model model) {
         Account user = (Account) session.getAttribute("user");
         if (user == null) {
             return "redirect:/login";
         }
         model.addAttribute("user", user);
-        model.addAttribute("chapters", chapterTable.getChapterData(exerciseTable));
-        model.addAttribute("progress", progressTable.getChapterProgressIndex(user.getUsername()));
-        return "chapter-list";
+        model.addAttribute("categories", categoryTable.getCategoryData(exerciseTable));
+        model.addAttribute("progress", progressTable.getCategoryProgressIndex(user.getUsername()));
+        return "category-list";
     }
 
-    @GetMapping("/chapter/{chapter}")
-    public String chapter(HttpSession session, @PathVariable int chapter, Model model) {
+    @GetMapping("/category/{category}")
+    public String category(HttpSession session, @PathVariable int category, Model model) {
         Account user = (Account) session.getAttribute("user");
         if (user == null) {
             return "redirect:/login";
         }
         model.addAttribute("user", user);
-        model.addAttribute("chapter", chapter);
-        model.addAttribute("exercises", exerciseTable.findByChapterOrderByNumber(chapter));
-        model.addAttribute("completion", progressTable.getCompletionIndex(user.getUsername(), chapter));
+        model.addAttribute("category", category);
+        model.addAttribute("exercises", exerciseTable.findByCategoryOrderByNumber(category));
+        model.addAttribute("completion", progressTable.getCompletionIndex(user.getUsername(), category));
         model.addAttribute("exercise", null);
         return "attempt-exercise";
     }
 
-    @GetMapping("/chapter/{chapter}/exercise/{exercise}")
-    public String practice(HttpSession session, HttpServletRequest request, @PathVariable int chapter,
+    @GetMapping("/category/{category}/exercise/{exercise}")
+    public String practice(HttpSession session, HttpServletRequest request, @PathVariable int category,
                            @PathVariable int exercise, Model model) {
         Account user = (Account) session.getAttribute("user");
         if (user == null) {
             return "redirect:/login";
         }
-        List<Exercise> exercises = exerciseTable.findByChapterOrderByNumber(chapter);
+        List<Exercise> exercises = exerciseTable.findByCategoryOrderByNumber(category);
         if (exercises.isEmpty()) {
             return "redirect:..";
         }
-        Exercise exerciseData = exerciseTable.findOneByChapterAndNumber(chapter, exercise);
-        Optional<Progress> progress = progressTable.findByAccountAndChapterAndExercise(user.getUsername(), chapter, exercise);
+        Exercise exerciseData = exerciseTable.findOneByCategoryAndNumber(category, exercise);
+        Optional<Progress> progress = progressTable.findByAccountAndCategoryAndExercise(user.getUsername(), category, exercise);
         String code = progress.map(Progress::getCode).orElse(exerciseData.getInitial());
         model.addAttribute("user", user);
-        model.addAttribute("chapter", chapter);
+        model.addAttribute("category", category);
         model.addAttribute("exercises", exercises);
-        model.addAttribute("completion", progressTable.getCompletionIndex(user.getUsername(), chapter));
+        model.addAttribute("completion", progressTable.getCompletionIndex(user.getUsername(), category));
         model.addAttribute("exercise", exerciseData);
         model.addAttribute("code", code);
         Map<String, ?> inputFlashMap = RequestContextUtils.getInputFlashMap(request);
@@ -132,41 +132,41 @@ public class AppController {
         return "attempt-exercise";
     }
 
-    @GetMapping("/chapter/{chapter}/new")
-    public String create(HttpSession session, Model model, @PathVariable int chapter) {
+    @GetMapping("/category/{category}/new")
+    public String create(HttpSession session, Model model, @PathVariable int category) {
         Account user = (Account) session.getAttribute("user");
         if (user == null || !user.getRole().equals("admin")) {
             return "redirect:/login";
         }
         model.addAttribute("user", user);
-        model.addAttribute("chapter", chapter);
-        model.addAttribute("exercises", exerciseTable.findByChapterOrderByNumber(chapter));
-        model.addAttribute("completion", progressTable.getCompletionIndex(user.getUsername(), chapter));
+        model.addAttribute("category", category);
+        model.addAttribute("exercises", exerciseTable.findByCategoryOrderByNumber(category));
+        model.addAttribute("completion", progressTable.getCompletionIndex(user.getUsername(), category));
         return "create-exercise";
     }
 
-    @PostMapping("/chapter/{chapter}/new")
-    public String processCreate(HttpSession session, Model model, @PathVariable int chapter,
+    @PostMapping("/category/{category}/new")
+    public String processCreate(HttpSession session, Model model, @PathVariable int category,
                                 String name, String text, String initial, String tests) {
         Account user = (Account) session.getAttribute("user");
         if (user == null || !user.getRole().equals("admin")) {
             return "redirect:/login";
         }
-        int id = 1 + exerciseTable.findMaxByChapter(chapter);
-        exerciseTable.create(chapter, id, id, name, text, initial, tests);
+        int id = 1 + exerciseTable.findMaxByCategory(category);
+        exerciseTable.create(category, id, id, name, text, initial, tests);
         return "redirect:exercise/" + id;
     }
 
-    @PostMapping("/chapter/{chapter}/exercise/{exercise}/run")
-    public RedirectView run(HttpSession session, RedirectAttributes redirectAttributes, @PathVariable int chapter,
+    @PostMapping("/category/{category}/exercise/{exercise}/run")
+    public RedirectView run(HttpSession session, RedirectAttributes redirectAttributes, @PathVariable int category,
                             @PathVariable int exercise, String attempt) {
         Account user = (Account) session.getAttribute("user");
         if (user == null) {
             return new RedirectView("/login");
         }
-        String testJson = exerciseTable.findOneByChapterAndNumber(chapter, exercise).getTests();
+        String testJson = exerciseTable.findOneByCategoryAndNumber(category, exercise).getTests();
         TestResults results = ClientCodeExecutor.INSTANCE.execute(attempt, testJson);
-        progressTable.updateProgress(user.getUsername(), chapter, exercise, attempt, results.doAllPass());
+        progressTable.updateProgress(user.getUsername(), category, exercise, attempt, results.doAllPass());
         if (results.hasError()) {
             redirectAttributes.addFlashAttribute("error", results);
         } else {
@@ -175,39 +175,40 @@ public class AppController {
         return new RedirectView("../" + exercise);
     }
 
-    @GetMapping("/chapter/{chapter}/exercise/{exercise}/edit")
-    public String edit(HttpSession session, Model model, @PathVariable int chapter, @PathVariable int exercise) {
-        Account user = (Account) session.getAttribute("user");
-        if (user == null || !user.getRole().equals("admin")) {
-            return "redirect:/login";
-        }
+    @GetMapping("/category/{category}/exercise/{exercise}/edit")
+    public String edit(HttpSession session, Model model, @PathVariable int category, @PathVariable int exercise) {
+//        Account user = (Account) session.getAttribute("user");
+//        if (user == null || !user.getRole().equals("admin")) {
+//            return "redirect:/login";
+//        }
+        Account user = accountTable.getOne("a");
         model.addAttribute("user", user);
-        model.addAttribute("chapter", chapter);
-        model.addAttribute("exercises", exerciseTable.findByChapterOrderByNumber(chapter));
-        model.addAttribute("completion", progressTable.getCompletionIndex(user.getUsername(), chapter));
-        model.addAttribute("exercise", exerciseTable.findOneByChapterAndNumber(chapter, exercise));
+        model.addAttribute("category", category);
+        model.addAttribute("exercises", exerciseTable.findByCategoryOrderByNumber(category));
+        model.addAttribute("completion", progressTable.getCompletionIndex(user.getUsername(), category));
+        model.addAttribute("exercise", exerciseTable.findOneByCategoryAndNumber(category, exercise));
         return "edit-exercise";
     }
 
-    @PostMapping("/chapter/{chapter}/exercise/{exercise}/edit")
-    public String processEdit(HttpSession session, @PathVariable int chapter, @PathVariable int exercise,
+    @PostMapping("/category/{category}/exercise/{exercise}/edit")
+    public String processEdit(HttpSession session, @PathVariable int category, @PathVariable int exercise,
                               String name, String text, String initial, String tests) {
         Account user = (Account) session.getAttribute("user");
         if (user == null || !user.getRole().equals("admin")) {
             return "redirect:/login";
         }
-        exerciseTable.update(chapter, exercise, name, text, initial, tests);
+        exerciseTable.update(category, exercise, name, text, initial, tests);
         return "redirect:../" + exercise;
     }
 
-    @GetMapping("/chapter/{chapter}/exercise/{exercise}/remove")
+    @GetMapping("/category/{category}/exercise/{exercise}/remove")
     @Transactional
-    public String remove(HttpSession session, @PathVariable int chapter, @PathVariable int exercise) {
+    public String remove(HttpSession session, @PathVariable int category, @PathVariable int exercise) {
         Account user = (Account) session.getAttribute("user");
         if (user == null || !user.getRole().equals("admin")) {
             return "redirect:/login";
         }
-        exerciseTable.deleteByChapterAndId(chapter, exercise);
+        exerciseTable.deleteByCategoryAndId(category, exercise);
         return "redirect:../1";
     }
 

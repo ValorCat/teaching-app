@@ -12,7 +12,7 @@ import javax.persistence.Table;
 @Table(name = "exercise", schema = Application.DB_SCHEMA)
 public class Exercise {
 
-    @Id private int chapter;
+    @Id private int category;
     @Id private int id;
     private int number;
     private String name;
@@ -22,8 +22,8 @@ public class Exercise {
 
     public Exercise() {}
 
-    public Exercise(int chapter, int id, int number, String name, String text, String initial, String tests) {
-        this.chapter = chapter;
+    public Exercise(int category, int id, int number, String name, String text, String initial, String tests) {
+        this.category = category;
         this.id = id;
         this.number = number;
         this.name = name;
@@ -32,8 +32,8 @@ public class Exercise {
         this.tests = tests;
     }
 
-    public int getChapter() {
-        return chapter;
+    public int getCategory() {
+        return category;
     }
 
     public int getId() {
@@ -60,8 +60,8 @@ public class Exercise {
         return tests;
     }
 
-    public void setChapter(int chapter) {
-        this.chapter = chapter;
+    public void setCategory(int category) {
+        this.category = category;
     }
 
     public void setId(int id) {
@@ -89,7 +89,7 @@ public class Exercise {
     }
 
     public String toString() {
-        return String.format("Exercise(%d,%d)", chapter, id);
+        return String.format("Exercise(%d,%d)", category, id);
     }
 
 }

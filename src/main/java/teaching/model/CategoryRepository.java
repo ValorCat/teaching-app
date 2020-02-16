@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
-public interface ChapterRepository extends JpaRepository<Chapter, Integer> {
+public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
-    default List<ChapterData> getChapterData(ExerciseRepository exercises) {
+    default List<CategoryData> getCategoryData(ExerciseRepository exercises) {
         return findAll(Sort.by("id").ascending())
                 .stream()
-                .sorted(Comparator.comparingInt(Chapter::getNumber))
-                .map(c -> new ChapterData(c, exercises.findByChapterOrderByNumber(c.getId()).size()))
+                .sorted(Comparator.comparingInt(Category::getNumber))
+                .map(c -> new CategoryData(c, exercises.findByCategoryOrderByNumber(c.getId()).size()))
                 .collect(Collectors.toList());
     }
 

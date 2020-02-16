@@ -6,14 +6,14 @@ import java.util.Objects;
 public class ProgressId implements Serializable {
 
     private String account;
-    private int chapter;
+    private int category;
     private int exercise;
 
     public ProgressId() {}
 
-    public ProgressId(String account, int chapter, int exercise) {
+    public ProgressId(String account, int category, int exercise) {
         this.account = account;
-        this.chapter = chapter;
+        this.category = category;
         this.exercise = exercise;
     }
 
@@ -22,14 +22,14 @@ public class ProgressId implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProgressId that = (ProgressId) o;
-        return chapter == that.chapter &&
+        return category == that.category &&
                 exercise == that.exercise &&
                 account.equals(that.account);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(account, chapter, exercise);
+        return Objects.hash(account, category, exercise);
     }
 
 }

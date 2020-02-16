@@ -8,13 +8,13 @@ import java.util.List;
 @Repository
 public interface ExerciseRepository extends JpaRepository<Exercise, ExerciseId> {
 
-    List<Exercise> findByChapterOrderByNumber(int chapter);
-    Exercise findOneByChapterAndNumber(int chapter, int number);
+    List<Exercise> findByCategoryOrderByNumber(int category);
+    Exercise findOneByCategoryAndNumber(int category, int number);
 
-    void deleteByChapterAndId(int chapter, int id);
+    void deleteByCategoryAndId(int category, int id);
 
-    default void update(int chapter, int number, String newName, String newText, String newInitial, String newTests) {
-        Exercise exercise = findOneByChapterAndNumber(chapter, number);
+    default void update(int category, int number, String newName, String newText, String newInitial, String newTests) {
+        Exercise exercise = findOneByCategoryAndNumber(category, number);
         exercise.setName(newName);
         exercise.setText(newText);
         exercise.setInitial(newInitial);
@@ -22,12 +22,12 @@ public interface ExerciseRepository extends JpaRepository<Exercise, ExerciseId> 
         save(exercise);
     }
 
-    default void create(int chapter, int id, int number, String name, String text, String initial, String tests) {
-        save(new Exercise(chapter, id, number, name, text, initial, tests));
+    default void create(int category, int id, int number, String name, String text, String initial, String tests) {
+        save(new Exercise(category, id, number, name, text, initial, tests));
     }
 
-    default int findMaxByChapter(int chapter) {
-        return findByChapterOrderByNumber(chapter).stream()
+    default int findMaxByCategory(int category) {
+        return findByCategoryOrderByNumber(category).stream()
                 .mapToInt(Exercise::getId)
                 .max()
                 .orElse(0);

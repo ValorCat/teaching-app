@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
     <head>
-        <title>Chapters</title>
-        <link th:href="@{/css/chapters.css}" type="text/css" rel="stylesheet"/>
+        <title>Categories</title>
+        <link th:href="@{/css/categories.css}" type="text/css" rel="stylesheet"/>
         <link th:href="@{/css/header.css}" type="text/css" rel="stylesheet"/>
     </head>
     <body>
         <div th:insert="fragments/header :: header"></div>
         <table>
             <tr>
-                <th>Chapter</th>
+                <th>Category</th>
                 <th>Progress</th>
             </tr>
-            <tr th:each="c : ${chapters}"
+            <tr th:each="c : ${categories}"
                 th:with="active = ${c.exerciseCount > 0 ? 'active' : 'inactive'}"
                 th:class="${active}">
                 <td>
-                    <a th:href="${active == 'active' || user.role == 'admin'} ? |chapter/${c.chapter.id}/exercise/1| : _"
-                       th:text="${c.chapter.number} + '. ' + ${c.chapter.name}"
+                    <a th:href="${active == 'active' || user.role == 'admin'} ? |category/${c.category.id}/exercise/1| : _"
+                       th:text="${c.category.number} + '. ' + ${c.category.name}"
                        th:class="${active}"></a>
                 </td>
-                <td th:text="${progress.getOrDefault(c.chapter.number, 0)} + ' / ' + ${c.exerciseCount}"></td>
+                <td th:text="${progress.getOrDefault(c.category.number, 0)} + ' / ' + ${c.exerciseCount}"></td>
             </tr>
         </table>
     </body>

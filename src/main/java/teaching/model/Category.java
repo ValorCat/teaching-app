@@ -5,8 +5,8 @@ import teaching.Application;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "chapter", schema = Application.DB_SCHEMA)
-public class Chapter {
+@Table(name = "category", schema = Application.DB_SCHEMA)
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,7 +28,7 @@ public class Chapter {
     }
 
     public String toString() {
-        return String.format("Chapter(%d,%s)", id, name);
+        return String.format("Category(%d,%s)", id, name);
     }
 
 }
