@@ -18,7 +18,7 @@ public interface ExerciseRepository extends JpaRepository<Exercise, ExerciseId> 
         exercise.setName(newName);
         exercise.setText(newText);
         exercise.setInitial(newInitial);
-        //exercise.setTests(newTests);
+        exercise.setTests(newTests);
         save(exercise);
     }
 

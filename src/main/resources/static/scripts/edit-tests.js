@@ -37,7 +37,7 @@ function setup() {
     }
 }
 
-/* DROPDOWN BUTTONS ================================================= */
+/* SUBMIT BUTTON ================================================= */
 
 function save() {
     // read visible form
@@ -45,9 +45,9 @@ function save() {
         name: document.getElementById('name-editor').value,
         text: document.getElementById('text-editor').value,
         initial: document.getElementById('editor').value,
-        tests: ''
+        tests: JSON.stringify(parseTests())
     }
-
+    
     // populate hidden form
     var realForm = document.getElementById('submit-form')
     for (var field of realForm.childNodes) {
@@ -56,6 +56,43 @@ function save() {
 
     // submit form
     realForm.submit()
+}
+
+function parseTests() {
+    tests = []
+    testListUI = document.getElementById('test-list')
+    testPanels = testListUI.getElementsByClassName('panel')
+    for (var panel of testPanels) {
+        testCase = {}
+        var snippetUI = panel.getElementsByClassName('test-snippet')[0]
+        if (!snippetUI.hidden) {
+            var snippet = snippetUI.getElementsByTagName('input')[0].value
+            testCase['test'] = snippet
+        }
+        testCase['inputs'] = parseTestIO(panel, 'input')
+        testCase['outputs'] = parseTestIO(panel, 'output')
+        tests.push(testCase)
+    }
+    return tests
+}
+
+function parseTestIO(panel, ioType) {
+    var test = {}
+    var ui = panel.getElementsByClassName(ioType)[0]
+    if (ui.firstElementChild.innerText !== 'None') {
+        for (var line of ui.children) {
+            var fields = line.getElementsByTagName('input')
+            var cssClass = line.classList.value
+            if (cssClass === 'infile' || cssClass === 'outfile') {
+                // file i/o
+                test[fields[0].value] = fields[1].value
+            } else {
+                // <stdin>, <stdout>, and <return>
+                test['<' + cssClass + '>'] = fields[0].value
+            }
+        }
+    }
+    return test
 }
 
 /* DROPDOWN BUTTONS ================================================= */
