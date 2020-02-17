@@ -30,6 +30,7 @@ class Sandbox:
         new_builtins = builtins.__dict__.copy()
         for name in builtin_blacklist:
             del new_builtins[name]
+        new_builtins['input'] = new_input
         new_builtins['open'] = new_open
         new_builtins['__import__'] = new_import
         return {
@@ -100,6 +101,11 @@ class ModuleWrapper:
             return super().__getattribute__(attr)
         except AttributeError:
             raise AttributeError(f"module '{super().__getattribute__('__name__')}' has no attribute '{attr}'")
+
+
+def new_input(prompt=''):
+    # stop input() from displaying prompt in stdout
+    return input()
 
 
 def new_open(file, mode='r'):

@@ -53,7 +53,7 @@ function save() {
     var fields = {
         name: document.getElementById('name-editor').value,
         text: document.getElementById('text-editor').value,
-        initial: document.getElementById('editor').getValue(),
+        initial: codeMirror.getValue(),
         tests: JSON.stringify(parseTests())
     }
     
