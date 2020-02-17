@@ -181,7 +181,6 @@ public class AppController {
         if (user == null || !user.getRole().equals("admin")) {
             return "redirect:/login";
         }
-        //Account user = accountTable.getOne("a");
         model.addAttribute("user", user);
         model.addAttribute("category", category);
         model.addAttribute("exercises", exerciseTable.findByCategoryOrderByNumber(category));
