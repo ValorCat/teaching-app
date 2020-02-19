@@ -1,6 +1,7 @@
 table {
   position: fixed;
   top: 8%;
+  width: 25%;
 }
 
 td, th {
@@ -42,8 +43,8 @@ tr.active a:hover {
 #info-panel {
   position: fixed;
   top: 8%;
-  left: 45%;
-  right: 1%;
+  left: 27%;
+  right: 15%;
   background: #eee;
   padding: 15px;
   padding-top: 0px;
