@@ -96,7 +96,7 @@ function parseTestIO(panel, ioType) {
                 // file i/o
                 test[fields[0].value] = fields[1].value
             } else {
-                // <stdin>, <stdout>, and <return>
+                // <stdin>, <stdout>, <return>, and <error>
                 test['<' + cssClass + '>'] = fields[0].value
             }
         }
@@ -184,6 +184,7 @@ function convertIOLocation(location, ioType) {
         case '<stdin>':     return 'stdin'
         case '<stdout>':    return 'stdout'
         case '<return>':    return 'return'
+        case '<error>':     return 'error'
         default:            return ioType === 'input' ? 'infile' : 'outfile'
     }
 }
@@ -199,6 +200,7 @@ inputMap = {
 outputMap = {
     '<stdout>': " I should see '{content}'",
     '<return>': " I should get {content}",
+    '<error>':  " I should get a {content}",
     '*':        " the file '{location}' should contain '{content}'"
 }
 

@@ -16,6 +16,7 @@ Input Model:
             "outputs": {
                 "<stdout>": "",
                 "<return>": "",
+                "<error>": "",
                 "file": ""
             }
         }
@@ -52,13 +53,26 @@ def run_tests(source_code, tests):
             if 'test' in test:
                 test_output = eval(test['test'], env.vars)
 
-        # if the sandbox exited with an exception
-        if env and env.exception:
-            report_error(test, env.exception)
-            continue  # skip to next test case
-
         case_results = {}
         case_success = True
+
+        # if the sandbox exited with an exception
+        if env.exception:
+            success = False
+            error_name = type(env.exception).__name__
+            if '<error>' in outputs:
+                expected_err = outputs.pop('<error>')
+                success = expected_err == error_name
+            if success:
+                case_results['<error>'] = (True, error_name)
+            else:
+                report_error(test, env.exception)
+                continue  # skip to next test case
+        elif '<error>' in outputs:
+            # we expected an error but didn't find one
+            outputs.pop('<error>')
+            case_results['<error>'] = (False, None)
+            case_success = False
 
         # if we need to check the return value
         if '<return>' in outputs:

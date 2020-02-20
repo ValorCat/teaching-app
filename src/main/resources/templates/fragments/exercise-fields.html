@@ -63,8 +63,9 @@
                     <div class="dropdown">
                         <a onclick="toggleDropdown(this)" class="small admin button dropdown-button">ADD OUTPUT ▼</a>
                         <div class="dropdown-content">
-                            <p onclick="addIO(this, 'return', 'output')">Check return value</p>
                             <p onclick="addIO(this, 'stdout', 'output')">Check console output</p>
+                            <p onclick="addIO(this, 'return', 'output')">Check return value</p>
+                            <p onclick="addIO(this, 'error', 'output')">Check raised exception</p>
                             <p onclick="addIO(this, 'outfile', 'output')">Check file contents</p>
                         </div>
                     </div>
@@ -75,6 +76,7 @@
                 <div class="stdin">The console input buffer will contain: <input type="text"></div>
                 <div class="infile">The file <input type="text" class="short"> will contain: <input type="text"></div>
                 <div class="return">The test snippet should return: <input type="text" class="short"></div>
+                <div class="error">The test snippet should raise: <input type="text" class="short"></div>
                 <div class="stdout">The console output should contain: <input type="text"></div>
                 <div class="outfile">The file <input type="text" class="short"> should contain: <input type="text"></div>
                 <a class="x button" onclick="dropIO(this)">✖</a>

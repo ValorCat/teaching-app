@@ -6,6 +6,7 @@ map_inputs = {
 map_outputs = {
     '<stdout>': " I should see '{content}'",
     '<return>': " I should get {content}",
+    '<error>':  " I should get a {content}",
     '*':        " the file '{location}' should contain '{content}'"
 }
 
@@ -38,4 +39,7 @@ def build_error_msg(case: dict, line: int, error):
     inputs = _translate_all(case['inputs'], map_inputs)
     outputs = _translate_all(case['outputs'], map_outputs)
     location = f'line {line}' if line >= 0 else 'test'
-    return f"When I run {test}{inputs},{outputs} ({location} raised {type(error).__name__}: {error})."
+    message = type(error).__name__
+    if error.args:
+        message += ": " + str(error)
+    return f"When I run {test}{inputs},{outputs} ({location} raised {message})."
