@@ -16,7 +16,7 @@
                 <div id="test-editor">
                     <p>Click on a test case to start modifying it.</p>
                     <div id="test-list"></div>
-                    <a class="small admin button" onclick="addTestPanel('New Test Case')">ADD TEST CASE</a>
+                    <a class="small admin button" onclick="addTestPanel('New Test Case', true)">ADD TEST CASE</a>
                 </div>
                 <br>
 
@@ -73,12 +73,24 @@
                 </div>
             </div>
             <div hidden id="io-prototype">
-                <div class="stdin">The console input buffer will contain: <input type="text"></div>
-                <div class="infile">The file <input type="text" class="short"> will contain: <input type="text"></div>
-                <div class="return">The test snippet should return: <input type="text" class="short"></div>
-                <div class="error">The test snippet should raise: <input type="text" class="short"></div>
-                <div class="stdout">The console output should contain: <input type="text"></div>
-                <div class="outfile">The file <input type="text" class="short"> should contain: <input type="text"></div>
+                <div class="stdin">
+                    The console input buffer will contain: <input type="text" placeholder="Hello world!">
+                </div>
+                <div class="infile">
+                    The file <input type="text" class="short" placeholder="input.txt"> will contain: <input type="text" placeholder="Hello world!">
+                </div>
+                <div class="return">
+                    The test snippet should return: <input type="text" class="short" placeholder="&quot;Hello world!&quot;">
+                </div>
+                <div class="error">
+                    The test snippet should raise: <input type="text" class="short" placeholder="TypeError">
+                </div>
+                <div class="stdout">
+                    The console output should contain: <input type="text" placeholder="Hello world!">
+                </div>
+                <div class="outfile">
+                    The file <input type="text" class="short" placeholder="output.txt"> should contain: <input type="text" placeholder="Hello world!">
+                </div>
                 <a class="x button" onclick="dropIO(this)">✖</a>
             </div>
             <script th:src="@{/scripts/edit-tests.js}"></script>

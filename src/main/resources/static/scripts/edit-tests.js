@@ -4,7 +4,7 @@
 function setup() {
     for (var test of testData) {
         // build panel
-        var panel = addTestPanel(collapse(test))
+        var panel = addTestPanel(collapse(test), false)
 
         // add test snippet
         if (test.test) {
@@ -24,7 +24,7 @@ function setup() {
     }
 }
 
-function addTestPanel(title) {
+function addTestPanel(title, open) {
     // build accordion header
     var header = document.getElementById('accordion-prototype').firstElementChild.cloneNode(true)
     header.innerHTML += title //collapse(test)
@@ -42,6 +42,11 @@ function addTestPanel(title) {
     var htmlList = document.getElementById('test-list')
     htmlList.appendChild(header)
     htmlList.appendChild(panel)
+
+    // auto open panel
+    if (open) {
+        header.click()
+    }
 
     return panel
 }
